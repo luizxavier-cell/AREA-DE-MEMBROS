@@ -5,7 +5,6 @@ import { env } from 'virtual:solid-env/client';
 
 export const platform = {
   name: env.VITE_APP_NAME,
-  tagline: 'Sua área exclusiva de membros',
   creator: {
     name: 'Marina Duarte',
     role: 'Criadora de conteúdo e mentora',

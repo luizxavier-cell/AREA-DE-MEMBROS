@@ -3,6 +3,7 @@ import { fileRoutes } from 'filesystem-routing/vite';
 import { defineConfig } from 'vitest/config';
 import solid from '@solidjs/vite-plugin';
 import tailwindcss from '@tailwindcss/vite';
+import { imagetools } from 'vite-imagetools';
 
 export default defineConfig({
   // Turnkey streaming SSR: no index.html and no entry files — the plugin
@@ -13,6 +14,9 @@ export default defineConfig({
     // Tailwind CSS v4 (the styling layer the shadcn-style components in
     // src/components/ui are written against). Theme tokens live in src/app.css.
     tailwindcss(),
+    // Build-time image variants (`?w=...&format=...&as=picture` imports), the
+    // Vite counterpart of next/image. Results are cached in node_modules/.cache.
+    imagetools(),
     solid({
       start: {
         middleware: './src/middleware.ts',
