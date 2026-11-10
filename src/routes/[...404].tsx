@@ -1,11 +1,8 @@
 import { Title } from '@solidjs/meta';
 import type { RouteDefinition } from '@solidjs/router';
 import { httpStatus } from '@solidjs/web';
-import { ArrowLeft, BookOpen, Compass } from 'lucide';
 
-import { ThemeToggle } from '../components/theme-toggle';
 import { buttonVariants } from '../components/ui/button';
-import { Icon } from '../components/ui/icon';
 import { platform } from '../lib/config';
 import { paths } from '../router';
 
@@ -18,29 +15,34 @@ export const route = {
 
 export default function NotFound() {
   return (
-    <main class="relative flex min-h-svh flex-col items-center justify-center gap-8 p-6 text-center">
+    <main class="flex min-h-svh flex-col items-center justify-center gap-8 overflow-hidden p-6 text-center">
       <Title>{`Página não encontrada · ${platform.name}`}</Title>
-      <ThemeToggle class="absolute top-4 right-4" />
-      <span class="flex size-14 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-        <Icon icon={Compass} class="size-7" />
-      </span>
-      <div class="max-w-md space-y-3">
-        <p class="text-sm font-medium text-primary">Erro 404</p>
-        <h1 class="text-3xl font-semibold tracking-tight">Página não encontrada</h1>
-        <p class="text-balance text-muted-foreground">
-          O endereço que você acessou não existe ou foi movido. Que tal voltar para os seus cursos?
-        </p>
+      {/* The "0" is a target with a dart: the address missed it. The ring sits
+          left in its square, so the dart overlaps the empty top-left of the
+          last 4. Decorative; the heading below carries the message. */}
+      <div
+        aria-hidden="true"
+        class="flex items-center text-[clamp(6.5rem,24vw,13rem)] leading-none font-semibold tracking-tighter select-none"
+      >
+        <span>4</span>
+        <img
+          src="/images/alvo-404.png"
+          alt=""
+          width="256"
+          height="256"
+          class="relative z-10 -mr-[0.12em] ml-[0.02em] size-[1.05em] -translate-y-[0.03em]"
+        />
+        <span>4</span>
       </div>
-      <div class="flex flex-wrap justify-center gap-3">
-        <a href={String(paths())} class={buttonVariants()}>
-          <Icon icon={ArrowLeft} />
-          Ir para o início
-        </a>
-        <a href={String(paths.cursos())} class={buttonVariants({ variant: 'outline' })}>
-          <Icon icon={BookOpen} />
-          Meus cursos
-        </a>
+      <div class="space-y-3">
+        <h1 class="text-3xl font-semibold tracking-tight text-balance">
+          <span class="sr-only">Erro 404: </span>Página não encontrada
+        </h1>
+        <p class="text-muted-foreground">O endereço acessado não existe ou foi movido.</p>
       </div>
+      <a href={String(paths())} class={buttonVariants()}>
+        Voltar ao início
+      </a>
     </main>
   );
 }
