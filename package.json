@@ -8,7 +8,7 @@
     "pnpm": ">=10"
   },
   "scripts": {
-    "preinstall": "node -e \"if (!/^pnpm\\//.test(process.env.npm_config_user_agent ?? '')) { console.error('Este projeto usa pnpm: rode pnpm install'); process.exit(1); }\"",
+    "preinstall": "npx only-allow pnpm",
     "dev": "vite",
     "build": "vite build",
     "start": "node --env-file-if-exists=.env dist/server/node.js",
