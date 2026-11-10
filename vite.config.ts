@@ -8,7 +8,7 @@ export default defineConfig({
   // Turnkey streaming SSR: no index.html and no entry files — the plugin
   // generates the entries around src/App.tsx, wrapped in src/Document.tsx.
   // `vite build` emits client assets to dist/client and the request handler
-  // to dist/server, plus the Node server (dist/server/node.js) `npm start` runs.
+  // to dist/server, plus the Node server (dist/server/node.js) `pnpm start` runs.
   plugins: [
     // Tailwind CSS v4 (the styling layer the shadcn-style components in
     // src/components/ui are written against). Theme tokens live in src/app.css.

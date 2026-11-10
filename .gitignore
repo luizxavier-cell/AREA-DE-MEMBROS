@@ -29,6 +29,10 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# pnpm only (see packageManager in package.json)
+package-lock.json
+yarn.lock
+
 # IDEs and editors
 /.idea
 .vscode/*

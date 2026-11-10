@@ -7,7 +7,7 @@
 - **Session cookie auth** — a signed cookie read and written by plain server functions (`src/server/session.ts`); sign in on the home page, and the rename mutation is authorized against it server-side.
 - **An API route** — uppercase method exports under `src/routes/api` answer HTTP requests (try `GET /api/users`).
 
-**Deployment contract:** there is a server. `vite build` emits static client assets to `dist/client`, a request handler to `dist/server/server.js`, and, via `start: { nodeServer: true }`, a ready-to-run Node server at `dist/server/node.js` that `npm start` runs. Streaming SSR is the default posture; set `ssr: false` in `vite.config.ts` for a static shell + API server: pages render on the client while server functions, sessions, and API routes keep working. Same template, one boolean.
+**Deployment contract:** there is a server. `vite build` emits static client assets to `dist/client`, a request handler to `dist/server/server.js`, and, via `start: { nodeServer: true }`, a ready-to-run Node server at `dist/server/node.js` that `pnpm start` runs. Streaming SSR is the default posture; set `ssr: false` in `vite.config.ts` for a static shell + API server: pages render on the client while server functions, sessions, and API routes keep working. Same template, one boolean.
 
 ## Server functions
 
@@ -40,10 +40,10 @@ The demo wires it as auth: `login`/`logout` form actions write the cookie, `getC
 
 `env.ts` at the project root declares every variable as a [Standard Schema](https://standardschema.dev) validator (valibot here; zod or arktype work identically — nothing is imported from the plugin). The plugin probes it automatically and serves two fully typed virtual modules; generated types land in `solid-env.d.ts`.
 
-- **`virtual:solid-env/server`**: every var, **read from `process.env` when the server boots** and validated then: secrets rotate without a rebuild, platform-injected vars work, and no secret value exists in any build artifact. A misconfigured server fails at boot with a per-key report (delete `SESSION_SECRET` from `.env` and run `npm start` to see it). Importing this module from client code fails the build, naming the importer.
+- **`virtual:solid-env/server`**: every var, **read from `process.env` when the server boots** and validated then: secrets rotate without a rebuild, platform-injected vars work, and no secret value exists in any build artifact. A misconfigured server fails at boot with a per-key report (delete `SESSION_SECRET` from `.env` and run `pnpm start` to see it). Importing this module from client code fails the build, naming the importer.
 - **`virtual:solid-env/client`**: the `VITE_`-prefixed vars, validated and **baked into the bundle** at build time (defaults applied, zero schema-library bytes shipped). The prefix is the line: client values are public, server values never leave the server.
 
-The plugin folds `.env` files into `process.env` for dev, build, and preview — no `loadEnv` boilerplate. Copy `.env.example` to `.env` to get started (`.env` is git-ignored); `npm start` picks it up via `--env-file-if-exists`, and deploy platforms provide the real environment.
+The plugin folds `.env` files into `process.env` for dev, build, and preview — no `loadEnv` boilerplate. Copy `.env.example` to `.env` to get started (`.env` is git-ignored); `pnpm start` picks it up via `--env-file-if-exists`, and deploy platforms provide the real environment.
 
 ## Server-only modules
 
@@ -69,10 +69,10 @@ Two vitest projects, because they need different halves of the framework: `clien
 
 Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+This project is pinned to pnpm (`packageManager` in `package.json`): installing with npm or yarn fails on purpose, and one-off binaries run through `pnpx`.
 
 ```bash
-$ npm install # or pnpm install or yarn install
+$ pnpm install
 $ cp .env.example .env # then fill in SESSION_SECRET
 ```
 
@@ -82,24 +82,24 @@ $ cp .env.example .env # then fill in SESSION_SECRET
 
 In the project directory, you can run:
 
-### `npm run dev`
+### `pnpm dev`
 
 Runs the app in the development mode with streaming SSR.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-### `npm run build`
+### `pnpm build`
 
 Builds client assets to `dist/client`, and the request handler plus the Node server to `dist/server`.
 
-### `npm start`
+### `pnpm start`
 
 Runs the production build with the emitted `dist/server/node.js` (loading `.env` if present — deploy platforms provide the real environment instead).
 
-### `npm run serve`
+### `pnpm serve`
 
 `vite preview` runs the production artifact without a server file: statics from `dist/client`, everything else through the built handler.
 
-### `npm test`
+### `pnpm test`
 
 Runs both test projects: the component tests inherited from `basic` and the session suite.
 
@@ -120,11 +120,11 @@ The default `{ fetch(request) }` export follows the Fetchable convention used by
 
 1. **Serve `dist/client` statically**, and route everything else — pages, `/_server`, API routes — to `handleRequest`.
 2. **Provide the server env vars** (`SESSION_SECRET` here) in the process environment: the server bundle reads and validates them **at boot**, not at build time, so they come from the platform's env/secret settings — never from a build artifact. Client `VITE_` vars are the opposite: baked in at `vite build`, so set those on the build machine/CI.
-3. **Resolve the bundle's dependencies**: `dist/server` imports its npm deps (`solid-js`, `@solidjs/web`, `valibot`, ...) as bare specifiers rather than inlining them, so whatever runs or re-bundles it needs `node_modules` present — true in every recipe below. The bundle itself is pure web-standard code (no `node:` imports, no top-level `await`).
+3. **Resolve the bundle's dependencies**: `dist/server` imports its dependencies (`solid-js`, `@solidjs/web`, `valibot`, ...) as bare specifiers rather than inlining them, so whatever runs or re-bundles it needs `node_modules` present — true in every recipe below. The bundle itself is pure web-standard code (no `node:` imports, no top-level `await`).
 
 ### Node
 
-The default, nothing to add. `start: { nodeServer: true }` in `vite.config.ts` makes the build emit `dist/server/node.js`: it serves `dist/client` statically (hashed assets under `assets/` as `Cache-Control: public, max-age=31536000, immutable`, everything else `must-revalidate`) and hands every other request to `handleRequest`. `npm run build`, then `npm start` runs it (loading `.env` if present; real deployments set the environment instead). Any node host (a VPS, Fly.io, Railway, ...) that runs `node dist/server/node.js` with `PORT` (and optionally `HOST`) and `SESSION_SECRET` set is done. The entry speaks plain HTTP: terminate TLS and compress at the reverse proxy or CDN in front of it.
+The default, nothing to add. `start: { nodeServer: true }` in `vite.config.ts` makes the build emit `dist/server/node.js`: it serves `dist/client` statically (hashed assets under `assets/` as `Cache-Control: public, max-age=31536000, immutable`, everything else `must-revalidate`) and hands every other request to `handleRequest`. `pnpm build`, then `pnpm start` runs it (loading `.env` if present; real deployments set the environment instead). Any node host (a VPS, Fly.io, Railway, ...) that runs `node dist/server/node.js` with `PORT` (and optionally `HOST`) and `SESSION_SECRET` set is done. The entry speaks plain HTTP: terminate TLS and compress at the reverse proxy or CDN in front of it.
 
 The file also exports `listener` (the `(req, res)` function), `createListener({ static?, event? })`, and `serve({ port, host, static, event })`, so it composes with an existing server — e.g. `app.use(listener)` in Express, or `createListener({ static: false })` behind Express's own static handling.
 
@@ -191,11 +191,11 @@ export default defineConfig({
 The Cloudflare plugin adopts the `ssr` environment and resolves its virtual Fetchable entry directly. `nodejs_compat` provides `node:async_hooks` for the per-request event scope and exposes Worker variables through `process.env` with a compatibility date of 2025-04-01 or later.
 
 ```bash
-$ npm run build
+$ pnpm build
 $ echo "SESSION_SECRET=..." > .dev.vars    # local dev secrets
-$ npx wrangler dev                          # local workerd — no account needed
-$ npx wrangler secret put SESSION_SECRET    # production secret
-$ npx wrangler deploy
+$ pnpx wrangler dev                         # local workerd — no account needed
+$ pnpx wrangler secret put SESSION_SECRET   # production secret
+$ pnpx wrangler deploy
 ```
 
 Streaming SSR, server functions, and the session cookie (pure WebCrypto) all work in workerd unchanged. Remember the flip side of baked client env: `VITE_` vars are fixed at `vite build`, not by worker vars.
@@ -227,7 +227,7 @@ Keep Solid's normal server build enabled — do not set `start.external`. For a 
 
 ```toml
 [build]
-command = "npm run build"
+command = "pnpm build"
 publish = "dist/client"
 ```
 
