@@ -49,13 +49,10 @@ export function AuthLayout(props: ParentProps) {
 
       <div
         aria-hidden="true"
-        class="relative hidden overflow-hidden bg-[radial-gradient(120%_120%_at_100%_0%,oklch(0.52_0.13_248)_0%,oklch(0.28_0.07_256)_55%,oklch(0.165_0.02_258)_100%)] text-white lg:col-start-2 lg:row-start-1 lg:flex lg:flex-col lg:justify-between lg:p-12"
+        class="hidden border-l lg:col-start-2 lg:row-start-1 lg:flex lg:flex-col lg:justify-between lg:p-12"
       >
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255/0.16)_1px,transparent_0)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_at_top_right,black,transparent_75%)]" />
-        <div class="absolute -top-24 -right-24 size-96 rounded-full bg-white/10 blur-3xl" />
-
-        <div class="relative max-w-md space-y-4">
-          <p class="text-sm font-medium tracking-widest text-white/70 uppercase">
+        <div class="max-w-md space-y-4">
+          <p class="text-sm font-medium tracking-widest text-muted-foreground uppercase">
             {platform.tagline}
           </p>
           <p class="text-4xl leading-tight font-semibold tracking-tight text-balance">
@@ -63,18 +60,22 @@ export function AuthLayout(props: ParentProps) {
           </p>
         </div>
 
-        <div class="relative space-y-8">
-          <figure class="max-w-md space-y-4 rounded-xl border border-white/15 bg-white/10 p-6 backdrop-blur-sm">
-            <Icon icon={Quote} class="size-6 text-white/60" />
+        <div class="space-y-8">
+          <figure class="max-w-md space-y-4 rounded-xl border bg-card p-6">
+            <Icon icon={Quote} class="size-6 text-muted-foreground" />
             <blockquote class="text-lg leading-relaxed">
               “Em três meses saí do zero para uma audiência que compra de mim. O passo a passo das
               aulas e as mentorias mudaram meu jogo.”
             </blockquote>
             <figcaption class="flex items-center gap-3">
-              <Avatar name="Juliana Prado" class="size-9" fallbackClass="bg-white/20 text-white" />
+              <Avatar
+                name="Juliana Prado"
+                class="size-9"
+                fallbackClass="bg-muted text-foreground"
+              />
               <span class="text-sm leading-tight">
                 <span class="block font-medium">Juliana Prado</span>
-                <span class="text-white/70">Membro desde 2025</span>
+                <span class="text-muted-foreground">Membro desde 2025</span>
               </span>
             </figcaption>
           </figure>
@@ -84,7 +85,7 @@ export function AuthLayout(props: ParentProps) {
                 <div class="space-y-1">
                   <dt class="sr-only">{item.label}</dt>
                   <dd class="text-2xl font-semibold">{item.value}</dd>
-                  <dd class="text-sm text-white/70">{item.label}</dd>
+                  <dd class="text-sm text-muted-foreground">{item.label}</dd>
                 </div>
               )}
             </For>
