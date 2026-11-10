@@ -9,7 +9,7 @@ import { Button } from '../../../components/ui/button';
 import { Input } from '../../../components/ui/form';
 import { Icon } from '../../../components/ui/icon';
 import { Empty } from '../../../components/ui/misc';
-import { Tabs, TabsList, TabsTrigger } from '../../../components/ui/tabs';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../../components/ui/tabs';
 import { getCourses, getProgress } from '../../../lib/api';
 import { platform } from '../../../lib/config';
 import { courseStats, type CourseStatus } from '../../../lib/progress';
@@ -96,9 +96,12 @@ export default function CoursesPage() {
           description="Todos os cursos incluídos no seu plano, com o seu progresso em cada um."
         />
 
-        <div class="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-          <Tabs value={filter()} onValueChange={(value) => setFilter(value as Filter)}>
-            <TabsList aria-label="Filtrar por situação" class="max-w-full overflow-x-auto">
+        <Tabs value={filter()} onValueChange={(value) => setFilter(value as Filter)} class="gap-6">
+          <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+            <TabsList
+              aria-label="Filtrar por situação"
+              class="max-w-full justify-start overflow-x-auto"
+            >
               <For each={filters}>
                 {(item) => (
                   <TabsTrigger value={item.value}>
@@ -110,54 +113,57 @@ export default function CoursesPage() {
                 )}
               </For>
             </TabsList>
-          </Tabs>
 
-          <div class="relative md:w-72">
-            <label for="filtro-cursos" class="sr-only">
-              Filtrar cursos
-            </label>
-            <Icon
-              icon={Search}
-              class="pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground"
-            />
-            <Input
-              id="filtro-cursos"
-              type="search"
-              placeholder="Filtrar por nome ou tema…"
-              value={term()}
-              onInput={(event) => setTerm(event.currentTarget.value)}
-              class="pl-8"
-            />
+            <div class="relative lg:w-72">
+              <label for="filtro-cursos" class="sr-only">
+                Filtrar cursos
+              </label>
+              <Icon
+                icon={Search}
+                class="pointer-events-none absolute top-1/2 left-2.5 -translate-y-1/2 text-muted-foreground"
+              />
+              <Input
+                id="filtro-cursos"
+                type="search"
+                placeholder="Filtrar por nome ou tema…"
+                value={term()}
+                onInput={(event) => setTerm(event.currentTarget.value)}
+                class="pl-8"
+              />
+            </div>
           </div>
-        </div>
 
-        <Show
-          when={visible().length > 0}
-          fallback={
-            <Empty
-              icon={<Icon icon={SearchX} />}
-              title="Nenhum curso encontrado"
-              description="Tente outro termo de busca ou mude o filtro selecionado."
+          {/* One panel, labelled by the active tab, lists that filter's courses. */}
+          <TabsContent value={filter()}>
+            <Show
+              when={visible().length > 0}
+              fallback={
+                <Empty
+                  icon={<Icon icon={SearchX} />}
+                  title="Nenhum curso encontrado"
+                  description="Tente outro termo de busca ou mude o filtro selecionado."
+                >
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      setTerm('');
+                      setFilter('todos');
+                    }}
+                  >
+                    Limpar filtros
+                  </Button>
+                </Empty>
+              }
             >
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => {
-                  setTerm('');
-                  setFilter('todos');
-                }}
-              >
-                Limpar filtros
-              </Button>
-            </Empty>
-          }
-        >
-          <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
-            <For each={visible()} keyed={(entry) => entry.course.id}>
-              {(entry) => <CourseCard course={entry().course} stats={entry().stats} />}
-            </For>
-          </div>
-        </Show>
+              <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                <For each={visible()} keyed={(entry) => entry.course.id}>
+                  {(entry) => <CourseCard course={entry().course} stats={entry().stats} />}
+                </For>
+              </div>
+            </Show>
+          </TabsContent>
+        </Tabs>
 
         <Show when={storefront().length > 0}>
           <section class="mt-4 space-y-4" aria-labelledby="disponiveis">

@@ -95,7 +95,9 @@ export function TabsTrigger(
       type="button"
       role="tab"
       id={`${tabs.baseId}-tab-${props.value}`}
-      aria-controls={`${tabs.baseId}-panel-${props.value}`}
+      // Only the active tab points at a panel: filter-style tab lists render
+      // a single panel for the current value (see routes/(membros)/cursos).
+      aria-controls={active() ? `${tabs.baseId}-panel-${props.value}` : undefined}
       aria-selected={active() ? 'true' : 'false'}
       tabindex={active() ? 0 : -1}
       disabled={props.disabled}

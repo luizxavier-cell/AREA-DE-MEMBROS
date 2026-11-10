@@ -172,7 +172,6 @@ function NavUser(props: { member: Member }) {
       <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger
-            aria-label="Menu da conta"
             class={cn(
               sidebarMenuButtonVariants({ size: 'lg' }),
               'data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground',
@@ -182,7 +181,7 @@ function NavUser(props: { member: Member }) {
               name={props.member.name}
               src={props.member.avatarUrl}
               class="size-8 rounded-lg"
-              fallbackClass="rounded-lg bg-sidebar-primary/15 text-sidebar-primary"
+              fallbackClass="rounded-lg bg-sidebar-primary/10 text-sidebar-primary"
             />
             <span class="grid flex-1 text-left text-sm leading-tight">
               <span class="truncate font-medium">{props.member.name}</span>

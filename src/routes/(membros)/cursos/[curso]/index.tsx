@@ -293,6 +293,7 @@ function CourseNotFound() {
       />
       <div class="flex flex-1 p-4 lg:p-6">
         <Empty
+          level={1}
           icon={<Icon icon={Layers} />}
           title="Curso não encontrado"
           description="O endereço pode ter mudado ou o curso não está mais disponível."

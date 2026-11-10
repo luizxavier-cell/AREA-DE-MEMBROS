@@ -394,6 +394,7 @@ function PlayerMessage(props: {
     <div class="flex flex-1 p-4 lg:p-6">
       <Title>{`${props.title} · ${platform.name}`}</Title>
       <Empty
+        level={1}
         icon={<Icon icon={props.locked ? Lock : ListVideo} />}
         title={props.title}
         description={props.description ?? 'Confira o endereço ou volte para a lista de aulas.'}

@@ -119,6 +119,8 @@ export function Kbd(props: { class?: string; children: JSX.Element }) {
 type EmptyProps = {
   icon?: JSX.Element;
   title: string;
+  /** Heading level of the title; 1 when the empty state is the whole page. */
+  level?: 1 | 2 | 3;
   description?: JSX.Element;
   children?: JSX.Element;
   class?: string;
@@ -140,7 +142,13 @@ export function Empty(props: EmptyProps) {
             {props.icon}
           </div>
         </Show>
-        <div class="text-lg font-medium tracking-tight">{props.title}</div>
+        <div
+          role="heading"
+          aria-level={props.level ?? 2}
+          class="text-lg font-medium tracking-tight"
+        >
+          {props.title}
+        </div>
         <Show when={props.description}>
           <div class="text-sm/relaxed text-muted-foreground">{props.description}</div>
         </Show>
