@@ -3,7 +3,7 @@ import type { RouteDefinition } from '@solidjs/router';
 import { For, createMemo } from 'solid-js';
 import { Clock, LifeBuoy, Mail, MessageCircle } from 'lucide';
 
-import { PageHeader, SiteHeader } from '../../components/site-header';
+import { PageHeader } from '../../components/site-header';
 import {
   Accordion,
   AccordionContent,
@@ -23,7 +23,6 @@ import { Icon } from '../../components/ui/icon';
 import { getFaqs } from '../../lib/api';
 import { platform } from '../../lib/config';
 import { cn } from '../../lib/utils';
-import { paths } from '../../router';
 
 export const route = {
   preload: () => void getFaqs(),
@@ -35,9 +34,8 @@ export default function HelpPage() {
   return (
     <>
       <Title>{`Ajuda · ${platform.name}`}</Title>
-      <SiteHeader breadcrumbs={[{ label: 'Início', href: String(paths()) }, { label: 'Ajuda' }]} />
 
-      <div class="flex flex-1 flex-col gap-6 p-4 lg:p-6">
+      <div class="flex flex-1 flex-col gap-6 px-4 pt-6 sm:px-6 lg:px-12 lg:pt-10">
         <PageHeader
           title="Central de ajuda"
           description="Respostas rápidas para as dúvidas mais comuns."

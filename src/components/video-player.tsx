@@ -40,7 +40,7 @@ function Poster(props: { course: Course; lesson: Lesson }) {
     <div
       class="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center text-white"
       style={{
-        'background-image': `radial-gradient(120% 120% at 0% 0%, oklch(0.5 0.2 ${props.course.hue}) 0%, oklch(0.2 0.08 ${(props.course.hue + 40) % 360}) 70%)`,
+        'background-image': `radial-gradient(120% 120% at 0% 0%, oklch(0.5 0.1 ${props.course.hue}) 0%, oklch(0.2 0.05 ${(props.course.hue + 10) % 360}) 70%)`,
       }}
     >
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255/0.18)_1px,transparent_0)] bg-size-[22px_22px]" />

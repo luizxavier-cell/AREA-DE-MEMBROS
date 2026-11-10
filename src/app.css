@@ -1,9 +1,15 @@
 /*
- * Design tokens da plataforma — tema shadcn/ui (base "neutral", Tailwind v4).
+ * Design tokens da plataforma — tema shadcn/ui (Tailwind v4).
  * Os componentes em src/components/ui leem só estes tokens (bg-card,
  * text-muted-foreground, border, ring…). Para trocar a identidade visual do
- * Creator, ajuste --primary/--ring (e os equivalentes em .dark); o resto da
- * interface acompanha.
+ * Creator, ajuste --primary, --brand-from/--brand-to e --ring (e os
+ * equivalentes em .dark); o resto da interface acompanha.
+ *
+ * Paleta "azul ardósia": um azul empoeirado, de croma baixo, sobre neutros
+ * levemente azulados (no escuro, um quase-preto marinho). Uma terceira cor,
+ * --highlight (âmbar areia), é minoritária: só sinaliza novidade/atenção e
+ * conquista (aviso fixado, certificado). Ações, progresso e estados ativos
+ * ficam sempre no azul.
  */
 @import 'tailwindcss';
 @import 'tw-animate-css';
@@ -13,66 +19,76 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
+  --background: oklch(0.985 0.004 250);
+  --foreground: oklch(0.2 0.035 260);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
+  --card-foreground: oklch(0.2 0.035 260);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  /* Cor da marca (violeta). */
-  --primary: oklch(0.541 0.281 293.009);
-  --primary-foreground: oklch(0.969 0.016 293.756);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.2 0.035 260);
+  /* Marca: azul ardósia profundo; branco por cima passa no AA (5.8:1). */
+  --primary: oklch(0.5 0.105 256);
+  --primary-foreground: oklch(0.985 0.006 250);
+  /* Degradê dos botões principais (claro→escuro, como luz vinda do alto). */
+  --brand-from: oklch(0.53 0.1 246);
+  --brand-to: oklch(0.45 0.11 262);
+  --secondary: oklch(0.955 0.009 255);
+  --secondary-foreground: oklch(0.24 0.035 260);
+  --muted: oklch(0.955 0.009 255);
+  --muted-foreground: oklch(0.5 0.03 258);
+  --accent: oklch(0.945 0.012 255);
+  --accent-foreground: oklch(0.24 0.035 260);
+  --highlight: oklch(0.6 0.13 62);
   --destructive: oklch(0.577 0.245 27.325);
-  --success: oklch(0.508 0.118 165.612);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.702 0.183 293.541);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.541 0.281 293.009);
-  --sidebar-primary-foreground: oklch(0.969 0.016 293.756);
-  --sidebar-accent: oklch(0.94 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.702 0.183 293.541);
+  --success: oklch(0.52 0.1 155);
+  --border: oklch(0.915 0.012 255);
+  --input: oklch(0.89 0.014 255);
+  --ring: oklch(0.62 0.1 252);
+  --sidebar: oklch(0.975 0.006 252);
+  --sidebar-foreground: oklch(0.2 0.035 260);
+  --sidebar-primary: oklch(0.5 0.105 256);
+  --sidebar-primary-foreground: oklch(0.985 0.006 250);
+  --sidebar-accent: oklch(0.945 0.012 255);
+  --sidebar-accent-foreground: oklch(0.24 0.035 260);
+  --sidebar-border: oklch(0.915 0.012 255);
+  --sidebar-ring: oklch(0.62 0.1 252);
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  /* Lighter violet with dark text: passes WCAG AA both as a button fill and
-     as text on the dark background (white on violet-500 does not). */
-  --primary: oklch(0.702 0.183 293.541);
-  --primary-foreground: oklch(0.2 0.06 293);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
+  /* Azul escuro de cinema: um quase-preto marinho (#090f17) em vez de preto
+     puro, com superfícies e linhas no mesmo matiz, para a arte das capas e
+     o azul da marca carregarem a página. */
+  --background: oklch(0.165 0.02 258);
+  --foreground: oklch(0.965 0.008 250);
+  --card: oklch(0.205 0.024 258);
+  --card-foreground: oklch(0.965 0.008 250);
+  --popover: oklch(0.205 0.024 258);
+  --popover-foreground: oklch(0.965 0.008 250);
+  /* Azul claro (#81bcfb) com texto marinho: AA no botão em degradê
+     (7.3–11.7:1) e como texto sobre o fundo (9.6:1). */
+  --primary: oklch(0.78 0.11 250);
+  --primary-foreground: oklch(0.18 0.035 258);
+  --brand-from: oklch(0.84 0.09 238);
+  --brand-to: oklch(0.71 0.12 256);
+  --secondary: oklch(0.265 0.028 258);
+  --secondary-foreground: oklch(0.965 0.008 250);
+  --muted: oklch(0.265 0.028 258);
+  --muted-foreground: oklch(0.745 0.028 255);
+  --accent: oklch(0.265 0.028 258);
+  --accent-foreground: oklch(0.965 0.008 250);
+  --highlight: oklch(0.84 0.09 75);
   --destructive: oklch(0.704 0.191 22.216);
-  --success: oklch(0.696 0.17 162.48);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.541 0.281 293.009);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.702 0.183 293.541);
-  --sidebar-primary-foreground: oklch(0.2 0.06 293);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.541 0.281 293.009);
+  --success: oklch(0.79 0.085 152);
+  --border: oklch(0.8 0.06 252 / 12%);
+  --input: oklch(0.8 0.06 252 / 17%);
+  --ring: oklch(0.62 0.1 252);
+  --sidebar: oklch(0.19 0.022 258);
+  --sidebar-foreground: oklch(0.965 0.008 250);
+  --sidebar-primary: oklch(0.78 0.11 250);
+  --sidebar-primary-foreground: oklch(0.18 0.035 258);
+  --sidebar-accent: oklch(0.265 0.028 258);
+  --sidebar-accent-foreground: oklch(0.965 0.008 250);
+  --sidebar-border: oklch(0.8 0.06 252 / 12%);
+  --sidebar-ring: oklch(0.62 0.1 252);
 }
 
 @theme inline {
@@ -95,6 +111,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-highlight: var(--highlight);
   --color-destructive: var(--destructive);
   --color-success: var(--success);
   --color-border: var(--border);
@@ -126,4 +143,34 @@
   summary::-webkit-details-marker {
     display: none;
   }
+}
+
+/* Horizontal rails scroll by touch, trackpad or the arrow buttons; the bar
+   itself would only add noise under the covers. */
+@utility scrollbar-none {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Billboard art: fades into the page at the bottom (phones) and also at the
+   left (wider screens), so the copy always sits on the page background and
+   keeps its contrast in both themes. */
+@utility billboard-fade {
+  mask-image: linear-gradient(to bottom, black 25%, transparent 85%);
+  @media (width >= 48rem) {
+    mask-image:
+      linear-gradient(to right, transparent 0%, black 50%),
+      linear-gradient(to top, transparent 0%, black 40%);
+    mask-composite: intersect;
+  }
+}
+
+/* Main call to action: the brand blue as a soft diagonal gradient with a thin
+   lit top edge. A solid --primary sits underneath as the fallback. */
+@utility bg-brand {
+  background-color: var(--primary);
+  background-image: linear-gradient(115deg, var(--brand-from), var(--brand-to));
+  box-shadow: inset 0 1px 0 oklch(1 0 0 / 22%);
 }

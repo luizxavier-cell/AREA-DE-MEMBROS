@@ -29,11 +29,19 @@ export const courseIcons: Record<CourseIcon, IconNode> = {
   camera: Camera,
 };
 
-/** The course's signature color, for dots and accents. */
-export const courseColor = (hue: number) => `oklch(0.62 0.19 ${hue})`;
-
 const coverGradient = (hue: number) =>
-  `linear-gradient(135deg, oklch(0.62 0.2 ${hue}) 0%, oklch(0.36 0.15 ${(hue + 40) % 360}) 100%)`;
+  `linear-gradient(135deg, oklch(0.6 0.1 ${hue}) 0%, oklch(0.3 0.06 ${(hue + 10) % 360}) 100%)`;
+
+/**
+ * Artwork for the n-th module or lesson of a course: the course hue, wobbling
+ * a few degrees and in lightness per item, so a rail of posters reads as one
+ * family, not clones, and never drifts out of the course's color.
+ */
+export const posterGradient = (hue: number, index: number) => {
+  const h = (hue + ((index % 3) - 1) * 8 + 360) % 360;
+  const light = 0.5 + ((index * 7) % 4) * 0.035;
+  return `linear-gradient(160deg, oklch(${light} 0.1 ${h}) 0%, oklch(0.26 0.055 ${(h + 10) % 360}) 100%)`;
+};
 
 type CourseCoverProps = {
   course: Pick<Course, 'category' | 'hue' | 'icon' | 'coverUrl'>;
@@ -46,7 +54,8 @@ type CourseCoverProps = {
 
 /**
  * Generated course artwork — a gradient in the course's hue with its icon —
- * or the uploaded image when the course has a `coverUrl`.
+ * or the uploaded image when the course has a `coverUrl`. The chroma stays
+ * low, so any hue the Creator picks sits in the dusty-blue palette.
  */
 export function CourseCover(props: CourseCoverProps) {
   return (
@@ -89,6 +98,41 @@ export function CourseCover(props: CourseCoverProps) {
           </span>
         </div>
       </Show>
+    </div>
+  );
+}
+
+/**
+ * Full-bleed art behind a billboard (home and course page): the cover image,
+ * or the generated gradient with a large icon, faded into the page so the
+ * copy on top sits on the page background in both themes.
+ */
+export function CourseBackdrop(props: {
+  course: Pick<Course, 'hue' | 'icon' | 'coverUrl'>;
+  class?: string;
+}) {
+  return (
+    <div aria-hidden="true" class={cn('pointer-events-none absolute inset-0 -z-10', props.class)}>
+      <div
+        class="billboard-fade absolute inset-x-0 top-0 h-72 overflow-hidden md:inset-y-0 md:right-0 md:left-auto md:h-auto md:w-[72%]"
+        style={{ 'background-image': coverGradient(props.course.hue) }}
+      >
+        <Show
+          when={props.course.coverUrl}
+          fallback={
+            <>
+              <div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255/0.28)_1px,transparent_0)] bg-size-[22px_22px]" />
+              <Icon
+                icon={courseIcons[props.course.icon]}
+                strokeWidth={1}
+                class="absolute top-[38%] right-[8%] size-40 -translate-y-1/2 text-white/25 md:top-1/2 md:right-[14%] md:size-72"
+              />
+            </>
+          }
+        >
+          {(src) => <img src={src()} alt="" class="size-full object-cover" />}
+        </Show>
+      </div>
     </div>
   );
 }

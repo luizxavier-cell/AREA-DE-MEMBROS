@@ -57,7 +57,7 @@ export const courses: Course[] = [
     category: 'Boas-vindas',
     level: 'Todos os níveis',
     instructor: 'Marina Duarte',
-    hue: 292,
+    hue: 230,
     icon: 'sparkles',
     access: 'liberado',
     outcomes: [
@@ -91,7 +91,7 @@ export const courses: Course[] = [
     category: 'Conteúdo',
     level: 'Iniciante',
     instructor: 'Marina Duarte',
-    hue: 268,
+    hue: 245,
     icon: 'rocket',
     access: 'liberado',
     outcomes: [

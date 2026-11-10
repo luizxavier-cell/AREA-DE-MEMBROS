@@ -41,6 +41,12 @@ const dateFormat = new Intl.DateTimeFormat('pt-BR', {
   timeZone: 'America/Sao_Paulo',
 });
 
+const dayMonthFormat = new Intl.DateTimeFormat('pt-BR', {
+  day: 'numeric',
+  month: 'short',
+  timeZone: 'America/Sao_Paulo',
+});
+
 const dateTimeFormat = new Intl.DateTimeFormat('pt-BR', {
   weekday: 'long',
   day: '2-digit',
@@ -53,6 +59,11 @@ const dateTimeFormat = new Intl.DateTimeFormat('pt-BR', {
 /** "2026-11-03" -> "03 de nov. de 2026" */
 export function formatDate(iso: string) {
   return dateFormat.format(new Date(iso));
+}
+
+/** "2026-12-01" -> "1 de dez." — for tight spots such as a poster. */
+export function formatDayMonth(iso: string) {
+  return dayMonthFormat.format(new Date(iso));
 }
 
 /** "2026-11-12T20:00:00-03:00" -> "quinta-feira, 12 de novembro às 20:00" */

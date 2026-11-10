@@ -3,7 +3,7 @@ import type { RouteDefinition } from '@solidjs/router';
 import { For, Show, createMemo, createSignal } from 'solid-js';
 import { Award, Check, Copy, GraduationCap, Share2 } from 'lucide';
 
-import { PageHeader, SiteHeader } from '../../components/site-header';
+import { PageHeader } from '../../components/site-header';
 import { Button, buttonVariants } from '../../components/ui/button';
 import {
   Card,
@@ -49,11 +49,8 @@ export default function CertificatesPage() {
   return (
     <>
       <Title>{`Certificados · ${platform.name}`}</Title>
-      <SiteHeader
-        breadcrumbs={[{ label: 'Início', href: String(paths()) }, { label: 'Certificados' }]}
-      />
 
-      <div class="flex flex-1 flex-col gap-8 p-4 lg:p-6">
+      <div class="flex flex-1 flex-col gap-8 px-4 pt-6 sm:px-6 lg:px-12 lg:pt-10">
         <PageHeader
           title="Certificados"
           description="Conclua 100% das aulas de um curso com certificado para recebê-lo aqui."
@@ -163,13 +160,13 @@ function CertificateCard(props: { certificate: Certificate; memberName: string }
   return (
     <Card class="gap-0 overflow-hidden p-0">
       {/* Certificate preview */}
-      <div class="relative bg-linear-to-br from-primary/10 via-card to-card p-2">
-        <div class="relative flex aspect-[1.414] flex-col items-center justify-center gap-2 rounded-lg border-2 border-double border-primary/30 bg-card px-6 text-center shadow-xs">
+      <div class="relative bg-linear-to-br from-highlight/12 via-card to-card p-2">
+        <div class="relative flex aspect-[1.414] flex-col items-center justify-center gap-2 rounded-lg border-2 border-double border-highlight/40 bg-card px-6 text-center shadow-xs">
           <div
             class="absolute inset-x-0 top-0 h-1.5 rounded-t-md"
-            style={{ background: `oklch(0.62 0.19 ${props.certificate.hue})` }}
+            style={{ background: `oklch(0.6 0.1 ${props.certificate.hue})` }}
           />
-          <span class="flex size-9 items-center justify-center rounded-full bg-primary/10 text-primary">
+          <span class="flex size-9 items-center justify-center rounded-full bg-highlight/15 text-highlight">
             <Icon icon={GraduationCap} />
           </span>
           <p class="text-[0.625rem] font-medium tracking-[0.2em] text-muted-foreground uppercase">

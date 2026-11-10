@@ -3,7 +3,7 @@ import type { RouteDefinition } from '@solidjs/router';
 import { For, Show, createMemo, createSignal, onSettled } from 'solid-js';
 import { Check, Monitor, Moon, Sun, type IconNode } from 'lucide';
 
-import { PageHeader, SiteHeader } from '../../components/site-header';
+import { PageHeader } from '../../components/site-header';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import {
@@ -22,7 +22,6 @@ import { getMember, updateProfile } from '../../lib/api';
 import { platform } from '../../lib/config';
 import { getThemePreference, setThemePreference, type ThemePreference } from '../../lib/theme';
 import { formatDate } from '../../lib/utils';
-import { paths } from '../../router';
 
 export const route = {
   preload: () => void getMember(),
@@ -32,11 +31,8 @@ export default function AccountPage() {
   return (
     <>
       <Title>{`Minha conta · ${platform.name}`}</Title>
-      <SiteHeader
-        breadcrumbs={[{ label: 'Início', href: String(paths()) }, { label: 'Minha conta' }]}
-      />
 
-      <div class="flex flex-1 flex-col gap-6 p-4 lg:p-6">
+      <div class="flex flex-1 flex-col gap-6 px-4 pt-6 sm:px-6 lg:px-12 lg:pt-10">
         <PageHeader
           title="Minha conta"
           description="Gerencie seus dados, sua senha e suas preferências."
@@ -349,7 +345,7 @@ function NotificationsSection() {
 const themeOptions: { value: ThemePreference; label: string; icon: IconNode }[] = [
   { value: 'light', label: 'Claro', icon: Sun },
   { value: 'dark', label: 'Escuro', icon: Moon },
-  { value: 'system', label: 'Sistema', icon: Monitor },
+  { value: 'system', label: 'Automático', icon: Monitor },
 ];
 
 function AppearanceSection() {
@@ -363,7 +359,10 @@ function AppearanceSection() {
     <Card class="max-w-2xl">
       <CardHeader>
         <CardTitle>Aparência</CardTitle>
-        <CardDescription>Escolha o tema da área de membros neste dispositivo.</CardDescription>
+        <CardDescription>
+          Escolha o tema neste dispositivo. No automático (padrão), a área de membros segue o
+          tema claro ou escuro do aparelho.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <fieldset class="grid grid-cols-3 gap-3">

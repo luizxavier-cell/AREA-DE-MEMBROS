@@ -1,12 +1,13 @@
 // Light/dark theme. The class on <html> is the single source of truth:
-// public/theme-init.js sets it before first paint, and the
-// toggles below flip it and remember the choice. Components never hold a
-// theme signal — icons and labels switch with `dark:` variants in CSS, so
-// server HTML and the hydrated page always agree.
+// public/theme-init.js sets it before first paint (and keeps following the
+// device while nothing is saved); the toggles below flip it and remember the
+// choice. Components never hold a theme signal — icons and labels switch
+// with `dark:` variants in CSS, so server HTML and the hydrated page agree.
 
 // Also read by public/theme-init.js — keep the two in sync.
 export const THEME_STORAGE_KEY = 'membros-theme';
 
+/** `system` (the default) follows the device's light/dark setting. */
 export type ThemePreference = 'light' | 'dark' | 'system';
 
 function prefersDark() {
@@ -18,7 +19,7 @@ export function getThemePreference(): ThemePreference {
     const saved = localStorage.getItem(THEME_STORAGE_KEY);
     if (saved === 'light' || saved === 'dark') return saved;
   } catch {
-    // Storage blocked (private mode, sandbox): fall through to the OS.
+    // Storage blocked (private mode, sandbox): fall through to the device.
   }
   return 'system';
 }
@@ -34,7 +35,11 @@ export function setThemePreference(preference: ThemePreference) {
   document.documentElement.classList.toggle('dark', dark);
 }
 
+/**
+ * One-click switch between light and dark. Landing back on the device's own
+ * theme clears the saved choice, so the page follows the device again.
+ */
 export function toggleTheme() {
-  const dark = document.documentElement.classList.contains('dark');
-  setThemePreference(dark ? 'light' : 'dark');
+  const dark = !document.documentElement.classList.contains('dark');
+  setThemePreference(dark === prefersDark() ? 'system' : dark ? 'dark' : 'light');
 }

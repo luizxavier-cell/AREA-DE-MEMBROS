@@ -2,9 +2,9 @@ import { createJSXDecorator, type Meta, type StoryObj } from 'storybook-solidjs-
 import { For } from 'solid-js';
 
 import { courses, initialProgress } from '../lib/mock-data';
-import { courseStats, findLesson } from '../lib/progress';
+import { courseStats, findLesson, isModuleReleased, lessonKey } from '../lib/progress';
 import type { Course } from '../lib/types';
-import { CourseCard } from './course-card';
+import { CourseCard, PosterCard } from './course-card';
 import { CourseCover } from './course-cover';
 import { CourseOutline } from './course-outline';
 import { LessonNotes } from './lesson-notes';
@@ -25,7 +25,7 @@ const statsFor = (id: string) => courseStats(course(id), progress);
 const meta = {
   title: 'Cursos/CourseCard',
   component: CourseCard,
-  subcomponents: { CourseCover, CourseOutline, VideoPlayer, LessonNotes },
+  subcomponents: { PosterCard, CourseCover, CourseOutline, VideoPlayer, LessonNotes },
   decorators: [
     createJSXDecorator((Story) => (
       <div class="w-80">
@@ -71,6 +71,39 @@ export const Grid: Story = {
       <CourseCard course={course('masterclass-negocio-digital')} />
     </div>
   ),
+};
+
+/** A course's modules as portrait posters, as in the Início rows. */
+export const Posters: Story = {
+  decorators: [],
+  parameters: { layout: 'padded' },
+  args: { course: course('metodo-criador') },
+  render: () => {
+    const item = course('metodo-criador');
+    const done = new Set(progress.completed);
+    return (
+      <div class="flex gap-3">
+        <For each={item.modules}>
+          {(module, index) => {
+            const finished = () =>
+              module.lessons.filter((lesson) => done.has(lessonKey(item.id, lesson.id))).length;
+            return (
+              <PosterCard
+                title={module.title}
+                meta={`${module.lessons.length} aulas`}
+                number={index() + 1}
+                hue={item.hue}
+                href={isModuleReleased(module) ? '#' : undefined}
+                percent={Math.round((finished() / module.lessons.length) * 100)}
+                done={finished() === module.lessons.length}
+                locked={!isModuleReleased(module)}
+              />
+            );
+          }}
+        </For>
+      </div>
+    );
+  },
 };
 
 /** Modules and lessons, with a module that unlocks later (drip). */

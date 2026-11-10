@@ -1,49 +1,23 @@
 import { Title } from '@solidjs/meta';
 import type { RouteDefinition } from '@solidjs/router';
 import { For, Show, createMemo } from 'solid-js';
-import type { JSX } from '@solidjs/web';
-import {
-  ArrowRight,
-  Award,
-  BookOpen,
-  CalendarClock,
-  CalendarPlus,
-  CircleCheck,
-  Clock,
-  Megaphone,
-  Pin,
-  Play,
-  type IconNode,
-} from 'lucide';
+import { Info, Play, RotateCcw } from 'lucide';
 
-import { CourseCard } from '../../components/course-card';
-import { CourseCover } from '../../components/course-cover';
-import { PageHeader, SiteHeader } from '../../components/site-header';
-import { Badge } from '../../components/ui/badge';
-import { buttonVariants } from '../../components/ui/button';
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '../../components/ui/card';
+import { Billboard, BillboardProgress, Eyebrow, billboardButton } from '../../components/billboard';
+import { CourseCard, PosterCard } from '../../components/course-card';
+import { Rail } from '../../components/rail';
 import { Icon } from '../../components/ui/icon';
-import { Progress } from '../../components/ui/misc';
-import {
-  getAnnouncements,
-  getCertificates,
-  getCourses,
-  getMember,
-  getNextLive,
-  getProgress,
-} from '../../lib/api';
-import { googleCalendarUrl } from '../../lib/calendar';
+import { getCourses, getMember, getProgress } from '../../lib/api';
 import { platform } from '../../lib/config';
-import { courseStats, type CourseStatus } from '../../lib/progress';
-import { cn, formatDate, formatDateTime, formatDuration, plural } from '../../lib/utils';
+import {
+  courseStats,
+  isModuleReleased,
+  lessonKey,
+  type CourseStats,
+  type CourseStatus,
+} from '../../lib/progress';
+import type { Course, Progress } from '../../lib/types';
+import { formatClock, formatDayMonth, formatDuration, plural } from '../../lib/utils';
 import { paths } from '../../router';
 
 export const route = {
@@ -51,9 +25,6 @@ export const route = {
     void getMember();
     void getCourses();
     void getProgress();
-    void getAnnouncements();
-    void getNextLive();
-    void getCertificates();
   },
 } satisfies RouteDefinition;
 
@@ -64,276 +35,220 @@ const statusOrder: Record<CourseStatus, number> = {
   concluido: 2,
 };
 
+type Entry = { course: Course; stats: CourseStats };
+
 export default function Home() {
   const member = createMemo(() => getMember());
   const courses = createMemo(() => getCourses());
   const progress = createMemo(() => getProgress());
-  const certificates = createMemo(() => getCertificates());
 
   const enrolled = createMemo(() =>
     courses()
       .filter((course) => course.access === 'liberado')
-      .map((course) => ({ course, stats: courseStats(course, progress()) })),
+      .map((course) => ({ course, stats: courseStats(course, progress()) }))
+      .toSorted((a, b) => statusOrder[a.stats.status] - statusOrder[b.stats.status]),
   );
 
-  const current = createMemo(() => {
+  // The billboard: the course studied last, else one in progress, else the
+  // first not started, else the first of the plan.
+  const featured = createMemo(() => {
     const list = enrolled();
     return (
       list.find(
         (entry) =>
           entry.course.id === progress().lastCourseId && entry.stats.status !== 'concluido',
       ) ??
-      list.find((entry) => entry.stats.status === 'em-andamento') ??
-      list.find((entry) => entry.stats.status === 'nao-iniciado')
+      list.find((entry) => entry.stats.status !== 'concluido') ??
+      list[0]
     );
   });
 
-  const featured = createMemo(() =>
-    enrolled()
-      .toSorted((a, b) => statusOrder[a.stats.status] - statusOrder[b.stats.status])
-      .slice(0, 4),
-  );
-
-  const totals = createMemo(() => {
-    const list = enrolled();
-    return {
-      courses: list.length,
-      studying: list.filter((entry) => entry.stats.status === 'em-andamento').length,
-      lessons: list.reduce((n, entry) => n + entry.stats.total, 0),
-      lessonsDone: list.reduce((n, entry) => n + entry.stats.done, 0),
-      doneSec: list.reduce((n, entry) => n + entry.stats.doneSec, 0),
-      completed: list.filter((entry) => entry.stats.status === 'concluido').length,
-    };
+  // Last studied first, then the other courses in progress.
+  const watching = createMemo(() => {
+    const last = progress().lastCourseId;
+    return enrolled()
+      .filter((entry) => entry.stats.status === 'em-andamento')
+      .toSorted((a, b) => Number(b.course.id === last) - Number(a.course.id === last));
   });
+
+  const storefront = createMemo(() => courses().filter((course) => course.access !== 'liberado'));
 
   return (
     <>
       <Title>{`Início · ${platform.name}`}</Title>
-      <SiteHeader breadcrumbs={[{ label: 'Início' }]} />
 
-      <div class="flex flex-1 flex-col gap-6 p-4 lg:p-6">
-        <PageHeader
-          title={`Olá, ${member().name.split(' ')[0]}!`}
-          description="Que bom ter você de volta. Continue de onde parou."
-        />
+      <Show when={featured()}>
+        {(entry) => <HomeBillboard entry={entry()} firstName={member().name.split(' ')[0]!} />}
+      </Show>
 
-        <Show when={current()}>
-          {(entry) => (
-            <Card class="gap-0 overflow-hidden p-0 md:flex-row">
-              <CourseCover
-                course={entry().course}
-                compact
-                class="aspect-[2/1] shrink-0 md:aspect-auto md:w-64 lg:w-72"
-              />
-              <div class="flex flex-1 flex-col gap-5 p-5 lg:p-6">
-                <div class="space-y-1.5">
-                  <p class="text-xs font-medium tracking-wider text-primary uppercase">
-                    Continue de onde parou
-                  </p>
-                  <h2 class="text-xl font-semibold tracking-tight">{entry().course.title}</h2>
-                  <Show when={entry().stats.resume}>
-                    {(resume) => (
-                      <p class="text-sm text-muted-foreground">
-                        Próxima aula:{' '}
-                        <span class="font-medium text-foreground">{resume().lesson.title}</span>
-                        {' · '}
-                        {resume().module.title}
-                      </p>
-                    )}
-                  </Show>
-                </div>
-                <div class="space-y-2">
-                  <div class="flex items-center justify-between text-sm">
-                    <span class="text-muted-foreground">
-                      {entry().stats.done} de{' '}
-                      {plural(entry().stats.total, 'aula concluída', 'aulas concluídas')}
-                    </span>
-                    <span class="font-medium tabular-nums">{entry().stats.percent}%</span>
-                  </div>
-                  <Progress value={entry().stats.percent} aria-label="Progresso do curso" />
-                </div>
-                <div class="mt-auto flex flex-wrap gap-2">
-                  <Show when={entry().stats.resume}>
-                    {(resume) => (
-                      <a
-                        class={buttonVariants()}
-                        href={String(paths.cursos(entry().course.id).aulas(resume().lesson.id))}
-                      >
-                        <Icon icon={Play} class="fill-current" />
-                        {entry().stats.done > 0 ? 'Continuar aula' : 'Começar curso'}
-                      </a>
-                    )}
-                  </Show>
-                  <a
-                    class={buttonVariants({ variant: 'outline' })}
-                    href={String(paths.cursos(entry().course.id))}
-                  >
-                    Ver conteúdo do curso
-                  </a>
-                </div>
-              </div>
-            </Card>
-          )}
+      <div class="flex flex-col gap-6 md:gap-8">
+        <Show when={watching().length > 0}>
+          <Rail title="Continuar assistindo">
+            <For each={watching()} keyed={(entry) => entry.course.id}>
+              {(entry) => (
+                <CourseCard
+                  course={entry().course}
+                  stats={entry().stats}
+                  class="w-64 sm:w-72 lg:w-80"
+                  href={
+                    entry().stats.resume
+                      ? String(
+                          paths.cursos(entry().course.id).aulas(entry().stats.resume!.lesson.id),
+                        )
+                      : undefined
+                  }
+                  meta={
+                    entry().stats.resume
+                      ? `Próxima: ${entry().stats.resume!.lesson.title}`
+                      : undefined
+                  }
+                />
+              )}
+            </For>
+          </Rail>
         </Show>
 
-        <div class="grid grid-cols-2 gap-4 lg:grid-cols-4 *:data-[slot=card]:bg-linear-to-t *:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card *:data-[slot=card]:shadow-xs dark:*:data-[slot=card]:bg-card">
-          <StatCard
-            label="Cursos em andamento"
-            value={String(totals().studying)}
-            icon={BookOpen}
-            footer={`${plural(totals().courses, 'curso liberado', 'cursos liberados')} no seu plano`}
-          />
-          <StatCard
-            label="Aulas concluídas"
-            value={String(totals().lessonsDone)}
-            icon={CircleCheck}
-            footer={`de ${plural(totals().lessons, 'aula disponível', 'aulas disponíveis')}`}
-          />
-          <StatCard
-            label="Tempo de estudo"
-            value={formatDuration(totals().doneSec)}
-            icon={Clock}
-            footer="em aulas concluídas"
-          />
-          <StatCard
-            label="Certificados"
-            value={String(certificates().length)}
-            icon={Award}
-            footer={
-              <a
-                href={String(paths.certificados())}
-                class="underline-offset-4 hover:text-foreground hover:underline"
-              >
-                Ver certificados
-              </a>
-            }
-          />
-        </div>
+        <For each={enrolled()} keyed={(entry) => entry.course.id}>
+          {(entry) => <CourseRail entry={entry()} progress={progress()} />}
+        </For>
 
-        <div class="grid gap-6 xl:grid-cols-3">
-          <section class="space-y-4 xl:col-span-2" aria-labelledby="meus-cursos">
-            <div class="flex items-center justify-between gap-2">
-              <h2 id="meus-cursos" class="text-lg font-semibold tracking-tight">
-                Meus cursos
-              </h2>
-              <a
-                href={String(paths.cursos())}
-                class={buttonVariants({ variant: 'ghost', size: 'sm' })}
-              >
-                Ver todos
-                <Icon icon={ArrowRight} />
-              </a>
-            </div>
-            <div class="grid gap-4 sm:grid-cols-2">
-              <For each={featured()} keyed={(entry) => entry.course.id}>
-                {(entry) => <CourseCard course={entry().course} stats={entry().stats} />}
-              </For>
-            </div>
-          </section>
-
-          <aside class="flex flex-col gap-6">
-            <LiveCard />
-            <AnnouncementsCard />
-          </aside>
-        </div>
+        <Show when={storefront().length > 0}>
+          <Rail title="Disponíveis para você">
+            <For each={storefront()} keyed={(course) => course.id}>
+              {(course) => <CourseCard course={course()} class="w-64 sm:w-72 lg:w-80" />}
+            </For>
+          </Rail>
+        </Show>
       </div>
     </>
   );
 }
 
-function StatCard(props: { label: string; value: string; icon: IconNode; footer: JSX.Element }) {
-  return (
-    <Card class="@container/card gap-3 py-5">
-      <CardHeader class="px-5">
-        <CardDescription>{props.label}</CardDescription>
-        <CardTitle class="text-2xl font-semibold tabular-nums @[200px]/card:text-3xl">
-          {props.value}
-        </CardTitle>
-        <CardAction>
-          <span class="flex size-8 items-center justify-center rounded-md bg-primary/10 text-primary">
-            <Icon icon={props.icon} />
-          </span>
-        </CardAction>
-      </CardHeader>
-      <CardFooter class="px-5 text-sm text-muted-foreground">{props.footer}</CardFooter>
-    </Card>
-  );
-}
+function HomeBillboard(props: { entry: Entry; firstName: string }) {
+  const course = () => props.entry.course;
+  const stats = () => props.entry.stats;
+  const lessonCount = () => course().modules.reduce((n, module) => n + module.lessons.length, 0);
 
-function LiveCard() {
-  const live = createMemo(() => getNextLive());
   return (
-    <Card class="gap-4">
-      <CardHeader>
-        <CardDescription class="flex items-center gap-2">
-          <span class="relative flex size-2">
-            <span class="absolute inline-flex size-full animate-ping rounded-full bg-red-500 opacity-60" />
-            <span class="relative inline-flex size-2 rounded-full bg-red-500" />
-          </span>
-          Próxima mentoria ao vivo
-        </CardDescription>
-        <CardTitle class="text-base leading-snug">{live().title}</CardTitle>
-      </CardHeader>
-      <CardContent class="space-y-2 text-sm text-muted-foreground">
-        <p class="flex items-center gap-2">
-          <Icon icon={CalendarClock} />
-          <span class="inline-block first-letter:uppercase">{formatDateTime(live().startsAt)}</span>
+    <Billboard course={course()}>
+      <Eyebrow>
+        Olá, {props.firstName} ·{' '}
+        {stats().status === 'em-andamento' ? 'Continue de onde parou' : 'Bons estudos'}
+      </Eyebrow>
+      <div class="space-y-3">
+        <h1 class="text-4xl font-bold tracking-tight text-balance md:text-5xl lg:text-6xl">
+          {course().title}
+        </h1>
+        <p class="text-sm text-muted-foreground">
+          {course().level} · {plural(lessonCount(), 'aula', 'aulas')} ·{' '}
+          {formatDuration(stats().durationSec)}
         </p>
-        <p class="flex items-center gap-2">
-          <Icon icon={Clock} />
-          {live().durationMin} min · com {live().host}
-        </p>
-      </CardContent>
-      <CardFooter class="gap-2">
-        <a
-          href={googleCalendarUrl(live())}
-          target="_blank"
-          rel="noopener noreferrer"
-          class={cn(buttonVariants({ size: 'sm' }), 'flex-1')}
-        >
-          <Icon icon={CalendarPlus} />
-          Adicionar à agenda
-        </a>
-      </CardFooter>
-    </Card>
-  );
-}
-
-function AnnouncementsCard() {
-  const announcements = createMemo(() => getAnnouncements());
-  return (
-    <Card class="gap-4">
-      <CardHeader>
-        <CardTitle class="flex items-center gap-2 text-base">
-          <Icon icon={Megaphone} class="text-muted-foreground" />
-          Avisos de {platform.creator.name.split(' ')[0]}
-        </CardTitle>
-        <CardDescription>Novidades e comunicados da plataforma.</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ul class="space-y-4">
-          <For each={announcements()}>
-            {(item) => (
-              <li
-                class="space-y-1 border-l-2 pl-3 data-pinned:border-primary"
-                data-pinned={item.pinned || undefined}
+      </div>
+      <p class="text-base text-pretty text-foreground/85 md:text-lg">{course().subtitle}</p>
+      <div class="flex flex-wrap gap-3">
+        <Show when={stats().resume}>
+          {(resume) => (
+            <a
+              href={String(paths.cursos(course().id).aulas(resume().lesson.id))}
+              class={billboardButton.primary}
+            >
+              <Show
+                when={stats().status === 'concluido'}
+                fallback={<Icon icon={Play} class="fill-current" />}
               >
-                <div class="flex items-center gap-2">
-                  <p class="text-sm leading-snug font-medium">{item.title}</p>
-                  <Show when={item.pinned}>
-                    <Badge variant="outline" class="ml-auto">
-                      <Icon icon={Pin} />
-                      Fixado
-                    </Badge>
-                  </Show>
-                </div>
-                <p class="text-sm text-muted-foreground">{item.body}</p>
-                <p class="text-xs text-muted-foreground">{formatDate(item.publishedAt)}</p>
-              </li>
+                <Icon icon={RotateCcw} />
+              </Show>
+              {stats().status === 'em-andamento'
+                ? 'Continuar'
+                : stats().status === 'concluido'
+                  ? 'Rever'
+                  : 'Começar'}
+            </a>
+          )}
+        </Show>
+        <a href={String(paths.cursos(course().id))} class={billboardButton.secondary}>
+          <Icon icon={Info} />
+          Mais informações
+        </a>
+      </div>
+      <Show when={stats().status === 'em-andamento'}>
+        <div class="w-full space-y-2">
+          <BillboardProgress
+            percent={stats().percent}
+            caption={`${stats().done} de ${plural(stats().total, 'aula', 'aulas')}`}
+            label={`Progresso em ${course().title}`}
+          />
+          <Show when={stats().resume}>
+            {(resume) => (
+              <p class="truncate text-sm text-muted-foreground">
+                Próxima: <span class="text-foreground">{resume().lesson.title}</span>
+              </p>
+            )}
+          </Show>
+        </div>
+      </Show>
+    </Billboard>
+  );
+}
+
+/**
+ * One row per course, as in the reference streaming layout: its modules as
+ * posters. A course with a single module shows that module's lessons.
+ */
+function CourseRail(props: { entry: Entry; progress: Progress }) {
+  const course = () => props.entry.course;
+  const done = createMemo(() => new Set(props.progress.completed));
+  const isDone = (lessonId: string) => done().has(lessonKey(course().id, lessonId));
+  const lessonHref = (lessonId: string) => String(paths.cursos(course().id).aulas(lessonId));
+
+  const meta = () =>
+    `${plural(course().modules.length, 'módulo', 'módulos')} · ${props.entry.stats.percent}% concluído`;
+
+  return (
+    <Rail title={course().title} meta={meta()} href={String(paths.cursos(course().id))}>
+      <Show
+        when={course().modules.length > 1}
+        fallback={
+          <For each={course().modules[0]?.lessons ?? []} keyed={(lesson) => lesson.id}>
+            {(lesson, index) => (
+              <PosterCard
+                title={lesson().title}
+                meta={formatClock(lesson().durationSec)}
+                number={index() + 1}
+                hue={course().hue}
+                href={lessonHref(lesson().id)}
+                done={isDone(lesson().id)}
+              />
             )}
           </For>
-        </ul>
-      </CardContent>
-    </Card>
+        }
+      >
+        <For each={course().modules} keyed={(module) => module.id}>
+          {(module, index) => {
+            const released = () => isModuleReleased(module());
+            const doneCount = () => module().lessons.filter((lesson) => isDone(lesson.id)).length;
+            // Open the module where the member stopped: its first unfinished lesson.
+            const target = () =>
+              module().lessons.find((lesson) => !isDone(lesson.id)) ?? module().lessons[0];
+            return (
+              <PosterCard
+                title={module().title}
+                meta={
+                  released()
+                    ? plural(module().lessons.length, 'aula', 'aulas')
+                    : `Libera em ${formatDayMonth(module().releaseAt!)}`
+                }
+                number={index() + 1}
+                hue={course().hue}
+                href={released() && target() ? lessonHref(target()!.id) : undefined}
+                percent={Math.round((doneCount() / Math.max(1, module().lessons.length)) * 100)}
+                done={module().lessons.length > 0 && doneCount() === module().lessons.length}
+                locked={!released()}
+              />
+            );
+          }}
+        </For>
+      </Show>
+    </Rail>
   );
 }

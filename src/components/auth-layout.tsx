@@ -49,7 +49,7 @@ export function AuthLayout(props: ParentProps) {
 
       <div
         aria-hidden="true"
-        class="relative hidden overflow-hidden bg-[radial-gradient(120%_120%_at_100%_0%,oklch(0.55_0.25_293)_0%,oklch(0.3_0.14_285)_55%,oklch(0.18_0.06_280)_100%)] text-white lg:col-start-2 lg:row-start-1 lg:flex lg:flex-col lg:justify-between lg:p-12"
+        class="relative hidden overflow-hidden bg-[radial-gradient(120%_120%_at_100%_0%,oklch(0.52_0.13_248)_0%,oklch(0.28_0.07_256)_55%,oklch(0.165_0.02_258)_100%)] text-white lg:col-start-2 lg:row-start-1 lg:flex lg:flex-col lg:justify-between lg:p-12"
       >
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgb(255_255_255/0.16)_1px,transparent_0)] bg-size-[24px_24px] mask-[radial-gradient(ellipse_at_top_right,black,transparent_75%)]" />
         <div class="absolute -top-24 -right-24 size-96 rounded-full bg-white/10 blur-3xl" />

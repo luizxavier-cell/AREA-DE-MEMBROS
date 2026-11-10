@@ -30,7 +30,6 @@ import {
 import { CourseOutline, lessonKindLabel } from '../../../../../components/course-outline';
 import { LessonNotes } from '../../../../../components/lesson-notes';
 import { ThemeToggle } from '../../../../../components/theme-toggle';
-import { Badge } from '../../../../../components/ui/badge';
 import { Button, buttonVariants } from '../../../../../components/ui/button';
 import { Icon } from '../../../../../components/ui/icon';
 import { Empty, Progress, Separator } from '../../../../../components/ui/misc';
@@ -235,19 +234,13 @@ function LessonView(props: { course: Course; current: LessonRef; progress: Progr
       <div class="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
         <div class="min-w-0 space-y-1.5">
           <p class="text-sm text-muted-foreground">
-            {props.current.module.title} · Aula {props.current.index + 1} de {total()}
+            {props.current.module.title} · Aula {props.current.index + 1} de {total()} ·{' '}
+            {formatClock(lesson().durationSec)}
+            <Show when={lesson().kind !== 'video'}> · {lessonKindLabel[lesson().kind]}</Show>
           </p>
-          <h1 class="text-2xl font-semibold tracking-tight text-balance">{lesson().title}</h1>
-          <div class="flex flex-wrap items-center gap-2 pt-1">
-            <Badge variant="secondary">{lessonKindLabel[lesson().kind]}</Badge>
-            <Badge variant="outline">{formatClock(lesson().durationSec)}</Badge>
-            <Show when={done()}>
-              <Badge variant="success">
-                <Icon icon={CircleCheck} />
-                Concluída
-              </Badge>
-            </Show>
-          </div>
+          <h1 class="text-2xl font-semibold tracking-tight text-balance md:text-3xl">
+            {lesson().title}
+          </h1>
         </div>
         <Button
           variant={done() ? 'outline' : 'default'}
@@ -265,7 +258,7 @@ function LessonView(props: { course: Course; current: LessonRef; progress: Progr
             }
           >
             <Icon icon={CircleCheck} class="text-success" />
-            Concluída — desmarcar
+            Concluída
           </Show>
         </Button>
       </div>
@@ -316,8 +309,6 @@ function LessonView(props: { course: Course; current: LessonRef; progress: Progr
           <LessonNotes storageKey={`notas:${key()}`} />
         </TabsContent>
       </Tabs>
-
-      <Separator />
 
       <nav aria-label="Navegação entre aulas" class="grid grid-cols-2 gap-3">
         <div>
