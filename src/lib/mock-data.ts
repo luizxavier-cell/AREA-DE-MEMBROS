@@ -47,6 +47,9 @@ export const member: Member = {
   memberSince: '2026-03-14',
 };
 
+/** Prototype values: any other password signs in, any other code is rejected. */
+export const mockAuth = { wrongPassword: 'senha-errada', resetCode: '123456' };
+
 export const courses: Course[] = [
   {
     id: 'comece-por-aqui',

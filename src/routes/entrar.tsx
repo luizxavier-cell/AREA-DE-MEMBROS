@@ -1,18 +1,18 @@
 import { Title } from '@solidjs/meta';
 import { useNavigate } from '@solidjs/router';
 import { Show, createSignal } from 'solid-js';
-import { LoaderCircle, Mail } from 'lucide';
+import { LoaderCircle } from 'lucide';
 
 import { AuthLayout } from '../components/auth-layout';
-import { Button, buttonVariants } from '../components/ui/button';
+import { Button } from '../components/ui/button';
 import { Checkbox, Input, Label } from '../components/ui/form';
 import { Icon } from '../components/ui/icon';
 import { PasswordInput } from '../components/ui/password-input';
+import { signIn } from '../lib/api';
 import { platform } from '../lib/config';
-import { cn } from '../lib/utils';
 import { paths } from '../router';
 
-type Errors = { email?: string; password?: string };
+type Errors = { email?: string; password?: string; credentials?: string };
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -39,10 +39,15 @@ export default function SignInPage() {
       return;
     }
 
-    // Somente frontend: aqui entra a chamada de autenticação do backend.
+    // E-mail and password are all it takes: no e-mail confirmation step.
     setSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 600));
+    const signedIn = await signIn(email, password);
     setSubmitting(false);
+    if (!signedIn) {
+      setErrors({ credentials: 'E-mail ou senha incorretos.' });
+      form.querySelector<HTMLInputElement>('#senha')?.focus();
+      return;
+    }
     navigate(String(paths()), { replace: true });
   };
 
@@ -109,24 +114,18 @@ export default function SignInPage() {
             </Label>
           </div>
 
+          <Show when={errors().credentials}>
+            <p role="alert" class="text-sm text-destructive">
+              {errors().credentials}
+            </p>
+          </Show>
+
           <Button type="submit" class="w-full" disabled={submitting()}>
             <Show when={submitting()}>
               <Icon icon={LoaderCircle} class="animate-spin" />
             </Show>
             {submitting() ? 'Entrando…' : 'Entrar'}
           </Button>
-
-          <div class="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:border-t">
-            <span class="relative z-10 bg-background px-2 text-muted-foreground">ou</span>
-          </div>
-
-          <a
-            href={String(paths['recuperar-senha']({ modo: 'link' }))}
-            class={cn(buttonVariants({ variant: 'outline' }), 'w-full')}
-          >
-            <Icon icon={Mail} />
-            Receber link de acesso por e-mail
-          </a>
         </div>
 
         <p class="text-center text-sm text-muted-foreground">
