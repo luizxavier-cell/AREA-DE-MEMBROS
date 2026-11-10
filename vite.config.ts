@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url';
 import { fileRoutes } from 'filesystem-routing/vite';
 import { defineConfig } from 'vitest/config';
 import solid from '@solidjs/vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   // Turnkey streaming SSR: no index.html and no entry files — the plugin
@@ -9,6 +10,9 @@ export default defineConfig({
   // `vite build` emits client assets to dist/client and the request handler
   // to dist/server, plus the Node server (dist/server/node.js) `npm start` runs.
   plugins: [
+    // Tailwind CSS v4 (the styling layer the shadcn-style components in
+    // src/components/ui are written against). Theme tokens live in src/app.css.
+    tailwindcss(),
     solid({
       start: {
         middleware: './src/middleware.ts',
@@ -49,7 +53,7 @@ export default defineConfig({
         test: {
           name: 'client',
           environment: 'jsdom',
-          include: ['src/**/*.test.tsx'],
+          include: ['src/**/*.test.tsx', 'src/lib/**/*.test.ts'],
         },
       },
       {
