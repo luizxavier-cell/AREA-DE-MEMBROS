@@ -1,27 +1,44 @@
+# Build output (vite build -> dist/client + dist/server)
 dist
-.wrangler
-.output
-.vercel
-.netlify
-.vinxi
-app.config.timestamp_*.js
+.vite
+vite.config.ts.timestamp-*
 
-# Environment
+# Deploy adapters (see README "Deployment")
+.output
+.nitro
+.netlify
+.wrangler
+.vercel
+
+# Environment (.env.example stays tracked)
 .env
 .env*.local
+.dev.vars*
+!.dev.vars.example
 
-# dependencies
+# Dependencies
 /node_modules
+
+# Tests
+coverage
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # IDEs and editors
 /.idea
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
 .project
 .classpath
 *.launch
 .settings/
-
-# Temp
-gitignore
+*.sw?
 
 # System Files
 .DS_Store
