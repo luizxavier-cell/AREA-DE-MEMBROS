@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from 'storybook-solidjs-vite';
 import { createSignal } from 'solid-js';
 import { expect, userEvent, within } from 'storybook/test';
-import { Award, ChevronsUpDown, LogOut, UserRound } from 'lucide';
+import { BookOpen, ChevronsUpDown, LogOut, UserRound } from 'lucide';
 
 import { Button } from './button';
 import {
@@ -48,8 +48,8 @@ export const Dropdown: Story = {
             Perfil
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <Icon icon={Award} />
-            Certificados
+            <Icon icon={BookOpen} />
+            Meus cursos
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem variant="destructive">

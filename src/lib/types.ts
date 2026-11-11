@@ -68,7 +68,6 @@ export type Course = {
   /** For `em-breve`: launch date (ISO). */
   launchAt?: string;
   outcomes: string[];
-  certificate: boolean;
   updatedAt: string;
   modules: CourseModule[];
 };
@@ -105,16 +104,6 @@ export type LiveEvent = {
   durationMin: number;
   host: string;
   joinUrl: string;
-};
-
-export type Certificate = {
-  id: string;
-  courseId: string;
-  courseTitle: string;
-  hue: number;
-  issuedAt: string;
-  workloadSec: number;
-  code: string;
 };
 
 export type Faq = { question: string; answer: string };

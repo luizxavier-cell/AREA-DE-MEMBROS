@@ -36,12 +36,11 @@ export const billboardButton = {
     'inline-flex h-10 items-center gap-2 rounded-md bg-foreground/8 px-5 text-sm font-semibold ring-1 ring-foreground/10 backdrop-blur-sm transition-colors outline-none ring-inset hover:bg-foreground/12 focus-visible:ring-[3px] focus-visible:ring-ring/50 md:h-11 md:px-6 md:text-base [&_svg]:size-5',
 };
 
-/** Small uppercase kicker above a billboard title, led by a brand dot. */
+/** Small uppercase kicker above a billboard title. */
 export function Eyebrow(props: ParentProps) {
   return (
-    <p class="flex items-center gap-2 text-xs font-semibold tracking-[0.14em] text-foreground/80 uppercase">
-      <span aria-hidden="true" class="size-1.5 shrink-0 rounded-full bg-primary" />
-      <span>{props.children}</span>
+    <p class="text-xs font-semibold tracking-[0.14em] text-foreground/80 uppercase">
+      {props.children}
     </p>
   );
 }

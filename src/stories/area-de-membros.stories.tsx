@@ -52,8 +52,6 @@ export const CursoNaoEncontrado: Story = {
   args: { url: '/cursos/curso-que-nao-existe' },
 };
 
-export const Certificados: Story = { name: 'Certificados', args: { url: '/certificados' } };
-
 export const MinhaConta: Story = { name: 'Minha conta', args: { url: '/conta' } };
 
 export const Ajuda: Story = { name: 'Ajuda', args: { url: '/ajuda' } };

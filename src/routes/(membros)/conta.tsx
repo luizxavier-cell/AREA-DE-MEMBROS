@@ -93,9 +93,7 @@ function ProfileSection() {
       <Card>
         <CardHeader>
           <CardTitle>Perfil</CardTitle>
-          <CardDescription>
-            Essas informações aparecem nos seus certificados e na comunidade.
-          </CardDescription>
+          <CardDescription>Essas informações aparecem na comunidade.</CardDescription>
         </CardHeader>
         <form class="flex flex-col gap-6" onSubmit={submit} onInput={() => setSaved(false)}>
           <CardContent class="grid gap-6">
@@ -360,8 +358,8 @@ function AppearanceSection() {
       <CardHeader>
         <CardTitle>Aparência</CardTitle>
         <CardDescription>
-          Escolha o tema neste dispositivo. No automático (padrão), a área de membros segue o
-          tema claro ou escuro do aparelho.
+          Escolha o tema neste dispositivo. No automático (padrão), a área de membros segue o tema
+          claro ou escuro do aparelho.
         </CardDescription>
       </CardHeader>
       <CardContent>

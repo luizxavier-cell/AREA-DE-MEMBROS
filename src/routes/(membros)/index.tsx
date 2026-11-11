@@ -132,7 +132,7 @@ function HomeBillboard(props: { entry: Entry; firstName: string }) {
   return (
     <Billboard course={course()}>
       <Eyebrow>
-        Olá, {props.firstName} ·{' '}
+        Olá, {props.firstName}!{' '}
         {stats().status === 'em-andamento' ? 'Continue de onde parou' : 'Bons estudos'}
       </Eyebrow>
       <div class="space-y-3">

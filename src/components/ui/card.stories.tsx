@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from 'storybook-solidjs-vite';
-import { Award } from 'lucide';
+import { BookOpen } from 'lucide';
 
 import { Badge } from './badge';
 import { Button } from './button';
@@ -28,10 +28,10 @@ export const Default: Story = {
   render: () => (
     <Card class="w-96">
       <CardHeader>
-        <CardTitle>Certificado de conclusão</CardTitle>
-        <CardDescription>Conclua todas as aulas para receber o seu certificado.</CardDescription>
+        <CardTitle>Método Criador Essencial</CardTitle>
+        <CardDescription>Continue de onde parou e conclua todas as aulas.</CardDescription>
         <CardAction>
-          <Icon icon={Award} class="size-5 text-primary" />
+          <Icon icon={BookOpen} class="size-5 text-primary" />
         </CardAction>
       </CardHeader>
       <CardContent class="flex items-center gap-3">

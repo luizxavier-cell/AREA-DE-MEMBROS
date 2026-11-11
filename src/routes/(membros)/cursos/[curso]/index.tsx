@@ -163,26 +163,6 @@ function CourseView(props: { course: Course; progress: ProgressData }) {
             <dd>{props.course.instructor}</dd>
             <dt class="text-muted-foreground">Atualizado em</dt>
             <dd>{formatDate(props.course.updatedAt)}</dd>
-            <Show when={props.course.certificate}>
-              <dt class="text-muted-foreground">Certificado</dt>
-              <dd>
-                <Switch fallback="Ao concluir todas as aulas">
-                  <Match
-                    when={props.course.access === 'liberado' && stats().status === 'concluido'}
-                  >
-                    <a
-                      href={String(paths.certificados())}
-                      class="font-medium text-primary underline-offset-4 hover:underline"
-                    >
-                      Disponível — ver certificado
-                    </a>
-                  </Match>
-                  <Match when={props.course.access === 'liberado'}>
-                    Ao concluir todas as aulas (faltam {stats().total - stats().done})
-                  </Match>
-                </Switch>
-              </dd>
-            </Show>
           </dl>
         </aside>
       </div>

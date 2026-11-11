@@ -68,7 +68,6 @@ export const courses: Course[] = [
       'Montar um plano de estudos realista',
       'Saber onde tirar dúvidas e encontrar materiais',
     ],
-    certificate: false,
     updatedAt: '2026-09-02',
     modules: [
       {
@@ -104,7 +103,6 @@ export const courses: Course[] = [
       'Ler métricas e ajustar a estratégia',
       'Criar sua primeira oferta digital',
     ],
-    certificate: true,
     updatedAt: '2026-11-03',
     modules: [
       {
@@ -188,7 +186,6 @@ export const courses: Course[] = [
       'Usar B-roll, trilha e legendas a seu favor',
       'Exportar no formato ideal de cada rede',
     ],
-    certificate: true,
     updatedAt: '2026-10-18',
     modules: [
       {
@@ -238,7 +235,6 @@ export const courses: Course[] = [
     icon: 'radio',
     access: 'liberado',
     outcomes: ['Tirar dúvidas direto com a mentora', 'Aprender com a análise de outros perfis'],
-    certificate: false,
     updatedAt: '2026-10-22',
     modules: [
       {
@@ -277,7 +273,6 @@ export const courses: Course[] = [
     icon: 'badge-check',
     access: 'liberado',
     outcomes: ['Escrever uma bio clara e atrativa', 'Organizar link e destaques do perfil'],
-    certificate: true,
     updatedAt: '2026-07-10',
     modules: [
       {
@@ -306,7 +301,6 @@ export const courses: Course[] = [
     icon: 'gift',
     access: 'liberado',
     outcomes: ['Ganhar tempo com modelos testados'],
-    certificate: false,
     updatedAt: '2026-10-27',
     modules: [
       {
@@ -350,7 +344,6 @@ export const courses: Course[] = [
       'Definir tom de voz e identidade visual',
       'Construir autoridade com provas sociais',
     ],
-    certificate: true,
     updatedAt: '2026-08-21',
     modules: [
       {
@@ -400,7 +393,6 @@ export const courses: Course[] = [
       'Planejar um lançamento do zero',
       'Criar uma oferta recorrente',
     ],
-    certificate: true,
     updatedAt: '2026-10-01',
     modules: [
       {
@@ -434,7 +426,6 @@ export const courses: Course[] = [
     access: 'em-breve',
     launchAt: '2027-01-20',
     outcomes: ['Compor fotos com intenção', 'Aproveitar a luz natural', 'Editar no celular'],
-    certificate: true,
     updatedAt: '2026-11-01',
     modules: [
       {
@@ -485,10 +476,6 @@ export function initialProgress(): Progress {
   };
 }
 
-export const certificateIssuedAt: Record<string, string> = {
-  'bio-que-converte': '2026-07-28',
-};
-
 export const announcements: Announcement[] = [
   {
     id: 'mentoria-novembro',
@@ -530,11 +517,6 @@ export const faqs: Faq[] = [
     question: 'Posso assistir às aulas pelo celular?',
     answer:
       'Sim. A plataforma funciona em qualquer navegador, no computador, tablet ou celular, e o seu progresso é sincronizado entre os dispositivos.',
-  },
-  {
-    question: 'Como recebo o certificado?',
-    answer:
-      'Ao concluir 100% das aulas de um curso com certificado, ele é emitido automaticamente e fica disponível na página Certificados para baixar ou compartilhar.',
   },
   {
     question: 'Perdi uma mentoria ao vivo. E agora?',

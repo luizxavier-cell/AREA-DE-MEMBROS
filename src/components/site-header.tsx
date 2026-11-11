@@ -24,7 +24,6 @@ import { Avatar } from './ui/misc';
 const navLinks = () => [
   { label: 'Início', href: String(paths()) },
   { label: 'Meus cursos', href: String(paths.cursos()) },
-  { label: 'Certificados', href: String(paths.certificados()) },
   { label: 'Ajuda', href: String(paths.ajuda()) },
 ];
 

@@ -12,7 +12,7 @@ import { query, revalidate } from '@solidjs/router';
 
 import { lessonKey } from './progress';
 import * as data from './mock-data';
-import type { Certificate, Course, Member } from './types';
+import type { Course, Member } from './types';
 
 let progress = data.initialProgress();
 let member = data.member;
@@ -38,38 +38,12 @@ export const getNextLive = query(async () => clone(data.nextLive), 'next-live');
 
 export const getFaqs = query(async () => clone(data.faqs), 'faqs');
 
-/** Certificates are issued for finished courses that offer one. */
-export const getCertificates = query(async (): Promise<Certificate[]> => {
-  const done = new Set(progress.completed);
-  return data.courses
-    .filter((course) => course.access === 'liberado' && course.certificate)
-    .filter((course) =>
-      course.modules.every((module) =>
-        module.lessons.every((lesson) => done.has(lessonKey(course.id, lesson.id))),
-      ),
-    )
-    .map((course) => {
-      const workloadSec = course.modules
-        .flatMap((module) => module.lessons)
-        .reduce((total, lesson) => total + lesson.durationSec, 0);
-      return {
-        id: `cert-${course.id}`,
-        courseId: course.id,
-        courseTitle: course.title,
-        hue: course.hue,
-        issuedAt: data.certificateIssuedAt[course.id] ?? new Date().toISOString().slice(0, 10),
-        workloadSec,
-        code: `CRT-${course.id.slice(0, 4).toUpperCase()}-${String(workloadSec).padStart(5, '0')}`,
-      };
-    });
-}, 'certificates');
-
 /** Marks a lesson as done (or not done) and refreshes what depends on it. */
 export async function setLessonCompleted(courseId: string, lessonId: string, completed: boolean) {
   const key = lessonKey(courseId, lessonId);
   const rest = progress.completed.filter((entry) => entry !== key);
   progress = { ...progress, completed: completed ? [...rest, key] : rest };
-  revalidate([getProgress.key, getCertificates.key]);
+  revalidate(getProgress.key);
 }
 
 /**

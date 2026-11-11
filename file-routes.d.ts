@@ -53,12 +53,6 @@ declare module "virtual:file-routes" {
       $$route: FileRouteEagerRef<Pick<typeof import("./src/routes/(membros)/ajuda"), Extract<"route", keyof typeof import("./src/routes/(membros)/ajuda")>>>;
     },
     {
-      path: "/(membros)/certificados";
-      page: true;
-      $component: FileRouteLazyRef<Pick<typeof import("./src/routes/(membros)/certificados"), Extract<"default", keyof typeof import("./src/routes/(membros)/certificados")>>>;
-      $$route: FileRouteEagerRef<Pick<typeof import("./src/routes/(membros)/certificados"), Extract<"route", keyof typeof import("./src/routes/(membros)/certificados")>>>;
-    },
-    {
       path: "/(membros)/conta";
       page: true;
       $component: FileRouteLazyRef<Pick<typeof import("./src/routes/(membros)/conta"), Extract<"default", keyof typeof import("./src/routes/(membros)/conta")>>>;
@@ -158,14 +152,6 @@ declare module "virtual:file-routes" {
           page: true;
           $component: FileRouteLazyRef<Pick<typeof import("./src/routes/(membros)/cursos/index"), Extract<"default", keyof typeof import("./src/routes/(membros)/cursos/index")>>>;
           $$route: FileRouteEagerRef<Pick<typeof import("./src/routes/(membros)/cursos/index"), Extract<"route", keyof typeof import("./src/routes/(membros)/cursos/index")>>>;
-          children?: undefined;
-        },
-        {
-          path: "/certificados";
-          id: "/certificados";
-          page: true;
-          $component: FileRouteLazyRef<Pick<typeof import("./src/routes/(membros)/certificados"), Extract<"default", keyof typeof import("./src/routes/(membros)/certificados")>>>;
-          $$route: FileRouteEagerRef<Pick<typeof import("./src/routes/(membros)/certificados"), Extract<"route", keyof typeof import("./src/routes/(membros)/certificados")>>>;
           children?: undefined;
         },
         {

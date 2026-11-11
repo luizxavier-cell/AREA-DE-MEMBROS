@@ -24,7 +24,6 @@ const course: Course = {
   icon: 'rocket',
   access: 'liberado',
   outcomes: [],
-  certificate: true,
   updatedAt: '2026-01-01',
   modules: [
     { id: 'm1', title: 'M1', lessons: [lesson('a'), lesson('b')] },

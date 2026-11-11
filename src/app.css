@@ -8,8 +8,8 @@
  * Paleta "azul ardósia": um azul empoeirado, de croma baixo, sobre neutros
  * puros: fundo sólido branco (claro) ou preto (escuro), superfícies e linhas
  * em cinza sem matiz. Uma terceira cor, --highlight (âmbar areia), é
- * minoritária: só sinaliza novidade/atenção e conquista (aviso fixado,
- * certificado). Ações, progresso e estados ativos ficam sempre no azul.
+ * minoritária: só sinaliza novidade/atenção (aviso fixado, notificações).
+ * Ações, progresso e estados ativos ficam sempre no azul.
  */
 @import 'tailwindcss';
 @import 'tw-animate-css';

@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from 'storybook-solidjs-vite';
 import { For } from 'solid-js';
-import { Award, BookOpen, CircleQuestionMark, GraduationCap, House } from 'lucide';
+import { BookOpen, CircleQuestionMark, GraduationCap, House } from 'lucide';
 
 import { Breadcrumbs } from './breadcrumb';
 import { Icon } from './icon';
@@ -25,7 +25,6 @@ import {
 const nav = [
   { label: 'Início', icon: House },
   { label: 'Meus cursos', icon: BookOpen, badge: '7' },
-  { label: 'Certificados', icon: Award },
   { label: 'Ajuda', icon: CircleQuestionMark },
 ];
 
