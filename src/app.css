@@ -266,3 +266,47 @@
     }
   }
 }
+
+/* Barra lateral do desktop: só ícones, abrindo no hover. Abre também com o
+   foco de teclado e enquanto um menu ou popover dela estiver aberto. Em telas
+   largas o espaço fica reservado, então o conteúdo nunca se move, e ela fica
+   aberta no topo da página (data-docked). */
+@utility desktop-rail {
+  --rail-label: 0;
+  width: 4.5rem;
+  transition: width 220ms cubic-bezier(0.2, 0, 0, 1);
+
+  @media (hover: hover) {
+    &:hover {
+      --rail-label: 1;
+      width: 15rem;
+    }
+  }
+
+  &:has(:focus-visible),
+  &:has([data-state='open']) {
+    --rail-label: 1;
+    width: 15rem;
+  }
+
+  &:has(:popover-open) {
+    --rail-label: 1;
+    width: 15rem;
+  }
+
+  @media (width >= 80rem) {
+    &[data-docked] {
+      --rail-label: 1;
+      width: 15rem;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+@utility desktop-rail-label {
+  opacity: var(--rail-label);
+  transition: opacity 160ms;
+}

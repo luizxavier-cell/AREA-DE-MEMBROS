@@ -16,7 +16,7 @@ export function Billboard(
   return (
     <section
       class={cn(
-        'relative isolate flex items-end pt-52 pb-10 md:-mt-16 md:min-h-[min(80svh,44rem)] md:items-center md:pt-24 md:pb-20',
+        'relative isolate flex items-end pt-52 pb-10 md:min-h-[min(80svh,44rem)] md:items-center md:pt-24 md:pb-20',
         props.class,
       )}
     >

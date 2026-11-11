@@ -34,23 +34,23 @@ import { Icon } from './ui/icon';
 import { Avatar } from './ui/misc';
 
 /**
- * The main sections: links in the top bar, tabs in the phone's tab bar. Chat
- * is a tab only; wider screens reach it through the ChatBubble.
+ * The main sections: the desktop sidebar's links and the phone's tabs. Chat is
+ * a tab only; wider screens reach it through the ChatBubble.
  */
 export const navLinks = () => [
   { label: 'Início', href: String(paths()), icon: House },
   { label: 'Meus cursos', href: String(paths.cursos()), icon: BookOpen },
-  { label: 'Chat', href: String(paths.chat()), icon: MessageCircle, phoneOnly: true },
   { label: 'Ajuda', href: String(paths.ajuda()), icon: CircleQuestionMark },
+  { label: 'Chat', href: String(paths.chat()), icon: MessageCircle, phoneOnly: true },
 ];
 
 const iconButton = cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'size-9 rounded-full');
 
 /**
- * Top bar of the members area, streaming-app style: brand, a few links,
- * then search, notices, theme and profile. It sits transparent over the
- * page's billboard and turns solid once the page scrolls. On phones the
- * links move to the MobileTabBar.
+ * Top bar of the members area on phones: brand, then search, notices, theme
+ * and profile. It sits transparent over the page's billboard and turns solid
+ * once the page scrolls. The links are in the MobileTabBar; on wider screens
+ * all of this moves to the DesktopSidebar.
  */
 export function SiteHeader() {
   const member = createMemo(() => getMember());
@@ -66,7 +66,7 @@ export function SiteHeader() {
   return (
     <header
       data-scrolled={scrolled() ? '' : undefined}
-      class="sticky top-0 z-40 bg-linear-to-b from-background/80 via-background/35 to-transparent transition-[background-color,box-shadow] duration-300 data-scrolled:bg-background/95 data-scrolled:shadow-sm data-scrolled:backdrop-blur supports-backdrop-filter:data-scrolled:bg-background/80"
+      class="sticky top-0 z-40 bg-linear-to-b md:hidden from-background/80 via-background/35 to-transparent transition-[background-color,box-shadow] duration-300 data-scrolled:bg-background/95 data-scrolled:shadow-sm data-scrolled:backdrop-blur supports-backdrop-filter:data-scrolled:bg-background/80"
     >
       <div class="flex h-16 items-center gap-2 px-4 sm:px-6 lg:px-12">
         <a
@@ -78,9 +78,6 @@ export function SiteHeader() {
           </span>
           <span class="max-sm:sr-only">{platform.name}</span>
         </a>
-        <nav aria-label="Principal" class="hidden md:block">
-          <NavLinks />
-        </nav>
         <div class="ml-auto flex items-center gap-1">
           <SearchBox />
           <Notices />
@@ -89,25 +86,6 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
-  );
-}
-
-function NavLinks() {
-  return (
-    <ul class="scrollbar-none -mx-2 flex items-center overflow-x-auto">
-      <For each={navLinks().filter((link) => !link.phoneOnly)}>
-        {(link) => (
-          <li class="shrink-0">
-            <a
-              href={link.href}
-              class="block rounded-md px-2 py-1.5 text-sm whitespace-nowrap text-foreground/70 transition-colors outline-none hover:text-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 data-active:font-semibold data-active:text-foreground"
-            >
-              {link.label}
-            </a>
-          </li>
-        )}
-      </For>
-    </ul>
   );
 }
 
@@ -140,7 +118,6 @@ function SearchBox() {
  */
 function Notices() {
   const id = createUniqueId();
-  const live = createMemo(() => getNextLive());
   const announcements = createMemo(() => getAnnouncements());
 
   return (
@@ -157,60 +134,73 @@ function Notices() {
           <span class="absolute top-2 right-2 size-2 rounded-full bg-highlight ring-2 ring-background" />
         </Show>
       </button>
-      <div
-        id={id}
-        popover
-        class="fixed top-16 right-4 bottom-auto left-auto m-0 max-h-[calc(100svh-5rem)] w-[min(22rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border bg-popover p-0 text-popover-foreground shadow-lg sm:right-6 lg:right-12"
-      >
-        <section class="border-b p-4" aria-labelledby={`${id}-live`}>
-          <h2
-            id={`${id}-live`}
-            class="flex items-center gap-2 text-xs font-medium text-muted-foreground"
-          >
-            <span class="relative flex size-2">
-              <span class="absolute inline-flex size-full animate-ping rounded-full bg-red-500 opacity-60" />
-              <span class="relative inline-flex size-2 rounded-full bg-red-500" />
-            </span>
-            Próximo ao vivo
-          </h2>
-          <p class="mt-2 leading-snug font-medium">{live().title}</p>
-          <p class="mt-1 text-xs text-muted-foreground first-letter:uppercase">
-            {formatDateTime(live().startsAt)} · {live().durationMin} min
-          </p>
-          <a
-            href={googleCalendarUrl(live())}
-            target="_blank"
-            rel="noopener noreferrer"
-            class={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'mt-3 w-full')}
-          >
-            <Icon icon={CalendarPlus} />
-            Adicionar à agenda
-          </a>
-        </section>
-        <section class="p-4" aria-labelledby={`${id}-avisos`}>
-          <h2 id={`${id}-avisos`} class="text-xs font-medium text-muted-foreground">
-            Avisos de {platform.creator.name.split(' ')[0]}
-          </h2>
-          <ul class="mt-3 space-y-4">
-            <For each={announcements()}>
-              {(item) => (
-                <li class="space-y-1">
-                  <p class="flex items-start gap-1.5 text-sm leading-snug font-medium">
-                    <Show when={item.pinned}>
-                      <Icon icon={Pin} class="mt-0.5 size-3.5 shrink-0 text-highlight" />
-                      <span class="sr-only">Fixado:</span>
-                    </Show>
-                    {item.title}
-                  </p>
-                  <p class="text-sm text-muted-foreground">{item.body}</p>
-                  <p class="text-xs text-muted-foreground">{formatDate(item.publishedAt)}</p>
-                </li>
-              )}
-            </For>
-          </ul>
-        </section>
-      </div>
+      <NoticesPanel id={id} class="top-16 right-4 sm:right-6" />
     </>
+  );
+}
+
+/** The notices and the next live session, in a native popover (see Notices). */
+export function NoticesPanel(props: { id: string; class: string }) {
+  const live = createMemo(() => getNextLive());
+  const announcements = createMemo(() => getAnnouncements());
+
+  return (
+    <div
+      id={props.id}
+      popover
+      class={cn(
+        'fixed bottom-auto left-auto m-0 max-h-[calc(100svh-5rem)] w-[min(22rem,calc(100vw-2rem))] overflow-y-auto rounded-lg border bg-popover p-0 text-popover-foreground shadow-lg',
+        props.class,
+      )}
+    >
+      <section class="border-b p-4" aria-labelledby={`${props.id}-live`}>
+        <h2
+          id={`${props.id}-live`}
+          class="flex items-center gap-2 text-xs font-medium text-muted-foreground"
+        >
+          <span class="relative flex size-2">
+            <span class="absolute inline-flex size-full animate-ping rounded-full bg-red-500 opacity-60" />
+            <span class="relative inline-flex size-2 rounded-full bg-red-500" />
+          </span>
+          Próximo ao vivo
+        </h2>
+        <p class="mt-2 leading-snug font-medium">{live().title}</p>
+        <p class="mt-1 text-xs text-muted-foreground first-letter:uppercase">
+          {formatDateTime(live().startsAt)} · {live().durationMin} min
+        </p>
+        <a
+          href={googleCalendarUrl(live())}
+          target="_blank"
+          rel="noopener noreferrer"
+          class={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'mt-3 w-full')}
+        >
+          <Icon icon={CalendarPlus} />
+          Adicionar à agenda
+        </a>
+      </section>
+      <section class="p-4" aria-labelledby={`${props.id}-avisos`}>
+        <h2 id={`${props.id}-avisos`} class="text-xs font-medium text-muted-foreground">
+          Avisos de {platform.creator.name.split(' ')[0]}
+        </h2>
+        <ul class="mt-3 space-y-4">
+          <For each={announcements()}>
+            {(item) => (
+              <li class="space-y-1">
+                <p class="flex items-start gap-1.5 text-sm leading-snug font-medium">
+                  <Show when={item.pinned}>
+                    <Icon icon={Pin} class="mt-0.5 size-3.5 shrink-0 text-highlight" />
+                    <span class="sr-only">Fixado:</span>
+                  </Show>
+                  {item.title}
+                </p>
+                <p class="text-sm text-muted-foreground">{item.body}</p>
+                <p class="text-xs text-muted-foreground">{formatDate(item.publishedAt)}</p>
+              </li>
+            )}
+          </For>
+        </ul>
+      </section>
+    </div>
   );
 }
 

@@ -40,7 +40,7 @@ export default function ChatPage() {
       <div
         data-keyboard={keyboard()}
         style={{ bottom: `${inset()}px` }}
-        class="keyboard-glide fixed inset-x-0 top-0 z-50 flex flex-col bg-background md:static md:z-auto md:mx-auto md:h-[calc(100svh-4rem)] md:w-full md:max-w-3xl"
+        class="keyboard-glide fixed inset-x-0 top-0 z-50 flex flex-col bg-background md:static md:z-auto md:mx-auto md:h-svh md:w-full md:max-w-3xl"
       >
         <header class="flex items-center gap-1 border-b py-2 pr-4 pl-1 sm:px-6 md:gap-3 md:py-3">
           <a

@@ -2,6 +2,7 @@ import { useLocation, type RouteDefinition } from '@solidjs/router';
 import { Loading, type ParentProps } from 'solid-js';
 
 import { ChatBubble } from '../components/chat-bubble';
+import { DesktopSidebar } from '../components/desktop-sidebar';
 import { MobileTabBar } from '../components/mobile-tab-bar';
 import { PageSkeleton } from '../components/page-skeleton';
 import { SiteHeader } from '../components/site-header';
@@ -27,7 +28,8 @@ export default function MembersLayout(props: ParentProps) {
   return (
     // One pixel taller than Safari's largest viewport, so a short page can
     // still hold the tab bar's scroll position with the toolbar collapsed.
-    <div class="flex min-h-[calc(100lvh+1px)] flex-col md:min-h-svh">
+    <div class="flex min-h-[calc(100lvh+1px)] flex-col md:min-h-svh md:pl-18 xl:pl-60">
+      <DesktopSidebar />
       <div class={['contents', { 'max-md:hidden': inChat() }]}>
         <SiteHeader />
       </div>
