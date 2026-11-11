@@ -89,3 +89,34 @@ export async function updateProfile(changes: Pick<Member, 'name' | 'email'>) {
   member = { ...member, ...changes };
   revalidate(getMember.key);
 }
+
+const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/** E-mail and password sign-in, with no e-mail confirmation. False when they don't match. */
+export async function signIn(_email: string, password: string): Promise<boolean> {
+  await wait(600);
+  return password !== data.mockAuth.wrongPassword;
+}
+
+/**
+ * E-mails a one-time code to reset the password. Resolves the same whether
+ * or not the account exists, so the form can't be used to discover accounts.
+ */
+export async function requestPasswordReset(_email: string): Promise<void> {
+  await wait(400);
+}
+
+/** Checks the code without using it up. False when wrong or expired. */
+export async function verifyResetCode(_email: string, code: string): Promise<boolean> {
+  await wait(400);
+  return code === data.mockAuth.resetCode;
+}
+
+/** Sets the new password. The backend must validate the code again here. */
+export async function resetPassword(
+  _email: string,
+  _code: string,
+  _password: string,
+): Promise<void> {
+  await wait(400);
+}
