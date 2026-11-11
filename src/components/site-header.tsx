@@ -106,7 +106,7 @@ function SearchBox() {
         type="search"
         placeholder="Buscar cursos…"
         autocomplete="off"
-        class="h-9 w-9 cursor-pointer rounded-full border border-transparent bg-transparent pr-3 pl-9 text-sm transition-[width,background-color,border-color] duration-300 outline-none placeholder:text-transparent hover:bg-accent focus:w-44 focus:cursor-text focus:border-input focus:bg-background focus:placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 not-placeholder-shown:w-44 not-placeholder-shown:border-input not-placeholder-shown:bg-background sm:focus:w-60 sm:not-placeholder-shown:w-60 [&::-webkit-search-cancel-button]:hidden"
+        class="h-9 w-9 cursor-pointer rounded-full border border-transparent bg-transparent pr-3 pl-9 text-base transition-[width,background-color,border-color] duration-300 outline-none placeholder:text-transparent hover:bg-accent focus:w-44 focus:cursor-text focus:border-input focus:bg-background focus:placeholder:text-muted-foreground focus-visible:ring-[3px] focus-visible:ring-ring/50 not-placeholder-shown:w-44 not-placeholder-shown:border-input not-placeholder-shown:bg-background sm:focus:w-60 sm:not-placeholder-shown:w-60 [&::-webkit-search-cancel-button]:hidden"
       />
     </form>
   );

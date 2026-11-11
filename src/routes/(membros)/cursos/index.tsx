@@ -104,7 +104,7 @@ export default function CoursesPage() {
                 placeholder="Filtrar por nome ou tema…"
                 value={term()}
                 onInput={(event) => setTerm(event.currentTarget.value)}
-                class="h-9 w-full rounded-full border border-input bg-transparent pr-4 pl-10 text-sm outline-none placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+                class="h-9 w-full rounded-full border border-input bg-transparent pr-4 pl-10 text-base outline-none pointer-fine:text-sm placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
               />
             </div>
           </div>

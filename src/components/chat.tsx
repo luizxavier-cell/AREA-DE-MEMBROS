@@ -210,7 +210,7 @@ export function ChatComposer(props: { creatorName: string }) {
         onKeyDown={sendOnEnter}
         style={{ height: `${lines() * FIELD_TEXT.lineHeight + FIELD_CHROME_Y}px` }}
         class={cn(
-          'scrollbar-none min-h-0 flex-1 resize-none rounded-3xl px-4 py-2.5 text-base leading-6 field-sizing-fixed md:text-base',
+          'scrollbar-none min-h-0 flex-1 resize-none rounded-3xl px-4 py-2.5 text-base leading-6 field-sizing-fixed md:pointer-fine:text-base',
           lines() < FIELD_MAX_LINES && 'overflow-hidden',
         )}
       />

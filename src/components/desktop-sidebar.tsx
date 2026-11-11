@@ -94,7 +94,7 @@ function SidebarSearch() {
           type="search"
           placeholder="Buscar"
           autocomplete="off"
-          class="desktop-rail-label w-full min-w-0 flex-1 bg-transparent outline-none placeholder:text-foreground/80 [&::-webkit-search-cancel-button]:hidden"
+          class="desktop-rail-label w-full min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-foreground/80 pointer-fine:text-[0.9375rem] [&::-webkit-search-cancel-button]:hidden"
         />
       </label>
     </form>

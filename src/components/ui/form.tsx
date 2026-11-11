@@ -9,8 +9,11 @@ import { Icon } from './icon';
 // and Switch. They are thin wrappers over native elements, so they work in
 // plain <form>s, before hydration, and with FormData on submit.
 
+// Text fields stay at 16px on touch screens: below that an iPhone zooms the
+// page when they take the focus. A phone on its side is past `md`, hence
+// `pointer-fine` on the smaller size.
 const fieldBase =
-  'w-full min-w-0 rounded-md border border-input bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:ring-destructive/40';
+  'w-full min-w-0 rounded-md border border-input bg-transparent text-base shadow-xs transition-[color,box-shadow] outline-none placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-destructive/20 md:pointer-fine:text-sm dark:bg-input/30 dark:aria-invalid:ring-destructive/40';
 
 type InputProps = Omit<ComponentProps<'input'>, 'class'> & { class?: string };
 
