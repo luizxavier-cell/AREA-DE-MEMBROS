@@ -42,6 +42,16 @@ export default defineConfig({
     // routes); handler modules never enter the client bundle.
     fileRoutes({ httpMethods: true, types: true }),
   ],
+  // The player is imported on demand, which Vite's dependency scan can't see;
+  // discovering it mid-session would force a reload on the first video lesson.
+  optimizeDeps: {
+    include: [
+      '@videojs/html/i18n/locales/pt-BR/register',
+      '@videojs/html/video/player',
+      '@videojs/html/video/skin',
+      '@videojs/html/media/hlsjs-video',
+    ],
+  },
   server: {
     port: 3000,
   },

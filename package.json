@@ -49,6 +49,8 @@
     "@solidjs/meta": "^1.0.0-next.2",
     "@solidjs/router": "^2.0.0-next.44",
     "@solidjs/web": "^2.0.0-rc.21",
+    "@videojs/hlsjs-video": "10.3.0",
+    "@videojs/html": "10.3.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide": "^1.71.0",

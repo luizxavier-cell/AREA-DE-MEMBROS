@@ -18,7 +18,7 @@ export type Lesson = {
   kind: LessonKind;
   durationSec: number;
   summary: string;
-  /** Embed URL from the video host (Vimeo, YouTube, Panda…). */
+  /** HLS manifest (`.m3u8`) URL sent by the API. */
   videoUrl?: string;
   materials?: Material[];
 };

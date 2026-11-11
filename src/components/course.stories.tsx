@@ -137,6 +137,24 @@ export const Player: Story = {
   ),
 };
 
+/** Video.js playing an HLS stream, the format the API sends in `videoUrl`. */
+export const PlayerHls: Story = {
+  decorators: [],
+  parameters: { layout: 'padded' },
+  args: { course: course('metodo-criador') },
+  render: () => (
+    <div class="max-w-3xl">
+      <VideoPlayer
+        course={course('metodo-criador')}
+        lesson={{
+          ...findLesson(course('metodo-criador'), 'reaproveitar')!.lesson,
+          videoUrl: 'https://stream.mux.com/BV3YZtogl89mg9VcNBhhnHm02Y34zI1nlMuMQfAbl3dM.m3u8',
+        }}
+      />
+    </div>
+  ),
+};
+
 export const Notes: Story = {
   decorators: [],
   parameters: { layout: 'padded' },

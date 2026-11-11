@@ -1,4 +1,4 @@
-import { Show } from 'solid-js';
+import { Show, createSignal, onSettled } from 'solid-js';
 import { FileText, Play } from 'lucide';
 
 import type { Course, Lesson } from '../lib/types';
@@ -7,10 +7,9 @@ import { courseIcons } from './course-cover';
 import { Icon } from './ui/icon';
 
 /**
- * The lesson's media area. With a `videoUrl` it embeds the host's player
- * (Vimeo, YouTube, Panda Video… — paste the provider's *embed* URL); without
- * one it shows a poster in the course colors, which is what the example data
- * renders.
+ * The lesson's media area. With a `videoUrl` (an HLS `.m3u8` manifest from the
+ * API) it plays the stream in Video.js; without one it shows a poster in the
+ * course colors, which is what the example data renders.
  */
 export function VideoPlayer(props: { course: Course; lesson: Lesson }) {
   return (
@@ -19,22 +18,54 @@ export function VideoPlayer(props: { course: Course; lesson: Lesson }) {
         when={props.lesson.videoUrl}
         fallback={<Poster course={props.course} lesson={props.lesson} />}
       >
-        {(src) => (
-          <iframe
-            src={src()}
-            title={props.lesson.title}
-            class="absolute inset-0 size-full"
-            allow="autoplay; fullscreen; picture-in-picture; encrypted-media"
-            allowfullscreen
-            loading="lazy"
-          />
-        )}
+        {(src) => <HlsPlayer src={src()} course={props.course} lesson={props.lesson} />}
       </Show>
     </div>
   );
 }
 
-function Poster(props: { course: Course; lesson: Lesson }) {
+/**
+ * The server and the first client render show the poster; the player replaces
+ * it once its custom elements are registered. `hlsjs-video` uses hls.js where
+ * the browser has MSE and falls back to native HLS elsewhere (older iPhones).
+ */
+function HlsPlayer(props: { src: string; course: Course; lesson: Lesson }) {
+  const [status, setStatus] = createSignal<'loading' | 'ready' | 'failed'>('loading');
+
+  onSettled(() => {
+    import('./video-player-elements').then(
+      () => setStatus('ready'),
+      () => setStatus('failed'),
+    );
+  });
+
+  return (
+    <Show
+      when={status() === 'ready'}
+      fallback={
+        <Poster
+          course={props.course}
+          lesson={props.lesson}
+          note={
+            status() === 'failed'
+              ? 'Não foi possível carregar o player. Recarregue a página.'
+              : undefined
+          }
+        />
+      }
+    >
+      <media-i18n lang="pt-BR">
+        <video-player>
+          <video-skin class="absolute inset-0 block size-full [--media-border-radius:0] [--media-font-family:var(--font-sans)]">
+            <hlsjs-video src={props.src} playsinline />
+          </video-skin>
+        </video-player>
+      </media-i18n>
+    </Show>
+  );
+}
+
+function Poster(props: { course: Course; lesson: Lesson; note?: string }) {
   const isReading = () => props.lesson.kind === 'texto';
   return (
     <div
@@ -64,9 +95,10 @@ function Poster(props: { course: Course; lesson: Lesson }) {
       <div class="relative max-w-lg space-y-1">
         <p class="text-lg font-semibold text-balance sm:text-xl">{props.lesson.title}</p>
         <p class="text-sm text-white/70">
-          {isReading()
-            ? 'Aula em texto — leia o conteúdo abaixo'
-            : `Vídeo · ${formatClock(props.lesson.durationSec)}`}
+          {props.note ??
+            (isReading()
+              ? 'Aula em texto — leia o conteúdo abaixo'
+              : `Vídeo · ${formatClock(props.lesson.durationSec)}`)}
         </p>
       </div>
     </div>
