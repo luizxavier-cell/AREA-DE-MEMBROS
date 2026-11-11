@@ -1,6 +1,7 @@
 import type { RouteDefinition } from '@solidjs/router';
 import { Loading, type ParentProps } from 'solid-js';
 
+import { MobileTabBar } from '../components/mobile-tab-bar';
 import { PageSkeleton } from '../components/page-skeleton';
 import { SiteHeader } from '../components/site-header';
 import { getAnnouncements, getMember, getNextLive } from '../lib/api';
@@ -20,9 +21,10 @@ export default function MembersLayout(props: ParentProps) {
   return (
     <div class="flex min-h-svh flex-col">
       <SiteHeader />
-      <main class="flex flex-1 flex-col pb-16">
+      <main class="flex flex-1 flex-col pb-[calc(env(safe-area-inset-bottom)+7rem)] md:pb-16">
         <Loading fallback={<PageSkeleton />}>{props.children}</Loading>
       </main>
+      <MobileTabBar />
     </div>
   );
 }

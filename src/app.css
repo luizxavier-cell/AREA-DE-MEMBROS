@@ -38,6 +38,13 @@
   --accent: oklch(0.955 0 0);
   --accent-foreground: oklch(0.205 0 0);
   --highlight: oklch(0.6 0.13 62);
+  /* Vidro da barra de abas: tinta clara, para o texto escuro manter o contraste. */
+  --glass-tint: oklch(1 0 0 / 72%);
+  --glass-rim: oklch(1 0 0 / 85%);
+  --glass-glow: oklch(1 0 0 / 55%);
+  --glass-shadow: oklch(0 0 0 / 18%);
+  --glass-pill: oklch(0 0 0 / 8%);
+  --glass-active: oklch(0.38 0.11 258);
   --destructive: oklch(0.577 0.245 27.325);
   --success: oklch(0.52 0.1 155);
   --border: oklch(0.922 0 0);
@@ -75,6 +82,12 @@
   --accent: oklch(0.26 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --highlight: oklch(0.84 0.09 75);
+  --glass-tint: oklch(0.22 0 0 / 56%);
+  --glass-rim: oklch(1 0 0 / 42%);
+  --glass-glow: oklch(1 0 0 / 14%);
+  --glass-shadow: oklch(0 0 0 / 50%);
+  --glass-pill: oklch(1 0 0 / 14%);
+  --glass-active: oklch(0.84 0.09 245);
   --destructive: oklch(0.704 0.191 22.216);
   --success: oklch(0.79 0.085 152);
   --border: oklch(1 0 0 / 12%);
@@ -172,4 +185,62 @@
   background-color: var(--primary);
   background-image: linear-gradient(115deg, var(--brand-from), var(--brand-to));
   box-shadow: inset 0 1px 0 oklch(1 0 0 / 22%);
+}
+
+/* Liquid Glass para a web. A refração real (SVG em backdrop-filter) só existe
+   no Chromium, e o Safari a ignora em silêncio; aqui o material vem de camadas
+   que funcionam no iPhone: fosco saturado, brilho interno nas bordas e um aro
+   especular. O blur fica num pseudo-elemento para não virar raiz de backdrop
+   dos filhos. No -webkit-backdrop-filter os valores são fixos: o Safari não
+   resolve var() nessa declaração. */
+@utility liquid-glass {
+  position: relative;
+  isolation: isolate;
+  box-shadow:
+    0 10px 30px var(--glass-shadow),
+    0 2px 6px var(--glass-shadow);
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background-color: var(--glass-tint);
+    box-shadow:
+      inset 0 1px 1px var(--glass-glow),
+      inset 0 -1px 1px var(--glass-glow),
+      inset 0 0 14px var(--glass-glow);
+    -webkit-backdrop-filter: blur(16px) saturate(190%);
+    backdrop-filter: blur(16px) saturate(190%);
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    pointer-events: none;
+    background: linear-gradient(
+      135deg,
+      var(--glass-rim),
+      transparent 38%,
+      transparent 62%,
+      var(--glass-rim)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask:
+      linear-gradient(#000 0 0) content-box exclude,
+      linear-gradient(#000 0 0);
+  }
+
+  @media (prefers-contrast: more) {
+    &::before {
+      background-color: var(--background);
+    }
+  }
 }

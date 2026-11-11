@@ -94,6 +94,9 @@ export default defineConfig({
   },
   build: {
     target: 'esnext',
+    // Tailwind v4's browser floor. With the esnext default the CSS minifier
+    // drops -webkit-backdrop-filter, and iOS before 18 loses the glass blur.
+    cssTarget: ['safari16.4', 'chrome111', 'firefox128'],
     assetsInlineLimit: 0,
   },
 });

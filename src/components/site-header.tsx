@@ -1,6 +1,17 @@
 import { For, Show, createMemo, createSignal, createUniqueId, onSettled } from 'solid-js';
 import type { JSX } from '@solidjs/web';
-import { Bell, CalendarPlus, GraduationCap, LogOut, Pin, Search, UserRound } from 'lucide';
+import {
+  Bell,
+  BookOpen,
+  CalendarPlus,
+  CircleQuestionMark,
+  GraduationCap,
+  House,
+  LogOut,
+  Pin,
+  Search,
+  UserRound,
+} from 'lucide';
 
 import { getAnnouncements, getMember, getNextLive } from '../lib/api';
 import { googleCalendarUrl } from '../lib/calendar';
@@ -21,10 +32,11 @@ import {
 import { Icon } from './ui/icon';
 import { Avatar } from './ui/misc';
 
-const navLinks = () => [
-  { label: 'Início', href: String(paths()) },
-  { label: 'Meus cursos', href: String(paths.cursos()) },
-  { label: 'Ajuda', href: String(paths.ajuda()) },
+/** The main sections: links in the top bar, tabs in the phone's tab bar. */
+export const navLinks = () => [
+  { label: 'Início', href: String(paths()), icon: House },
+  { label: 'Meus cursos', href: String(paths.cursos()), icon: BookOpen },
+  { label: 'Ajuda', href: String(paths.ajuda()), icon: CircleQuestionMark },
 ];
 
 const iconButton = cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'size-9 rounded-full');
@@ -32,7 +44,8 @@ const iconButton = cn(buttonVariants({ variant: 'ghost', size: 'icon' }), 'size-
 /**
  * Top bar of the members area, streaming-app style: brand, a few links,
  * then search, notices, theme and profile. It sits transparent over the
- * page's billboard and turns solid once the page scrolls.
+ * page's billboard and turns solid once the page scrolls. On phones the
+ * links move to the MobileTabBar.
  */
 export function SiteHeader() {
   const member = createMemo(() => getMember());
@@ -70,9 +83,6 @@ export function SiteHeader() {
           <UserMenu member={member()} />
         </div>
       </div>
-      <nav aria-label="Principal" class="-mt-2 px-4 pb-2 sm:px-6 md:hidden">
-        <NavLinks />
-      </nav>
     </header>
   );
 }
