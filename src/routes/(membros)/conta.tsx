@@ -93,7 +93,6 @@ function ProfileSection() {
       <Card>
         <CardHeader>
           <CardTitle>Perfil</CardTitle>
-          <CardDescription>Essas informações aparecem na comunidade.</CardDescription>
         </CardHeader>
         <form class="flex flex-col gap-6" onSubmit={submit} onInput={() => setSaved(false)}>
           <CardContent class="grid gap-6">

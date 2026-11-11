@@ -3,6 +3,7 @@
 // porta de entrada para estes dados é src/lib/api.ts.
 import type {
   Announcement,
+  ChatMessage,
   Course,
   Faq,
   Lesson,
@@ -76,7 +77,6 @@ export const courses: Course[] = [
         lessons: [
           lesson('seja-bem-vinda', 'Seja bem-vinda(o)!', '3:12'),
           lesson('tour-pela-plataforma', 'Tour pela área de membros', '5:40'),
-          lesson('comunidade', 'Como participar da comunidade', '2:00', { kind: 'texto' }),
           lesson('plano-de-estudos', 'Seu plano de estudos', '4:25', {
             materials: [pdf('Plano de estudos semanal', '320 KB')],
           }),
@@ -446,7 +446,6 @@ export function initialProgress(): Progress {
     completed: [
       'comece-por-aqui/seja-bem-vinda',
       'comece-por-aqui/tour-pela-plataforma',
-      'comece-por-aqui/comunidade',
       'comece-por-aqui/plano-de-estudos',
       'metodo-criador/por-que-criar',
       'metodo-criador/encontrando-seu-nicho',
@@ -480,7 +479,7 @@ export const announcements: Announcement[] = [
   {
     id: 'mentoria-novembro',
     title: 'Mentoria de novembro confirmada',
-    body: 'O encontro será no dia 18, às 20h. Envie suas perguntas pela comunidade até o dia 16.',
+    body: 'O encontro será no dia 18, às 20h. Envie suas perguntas pelo chat até o dia 16.',
     publishedAt: '2026-11-08',
     pinned: true,
   },
@@ -506,6 +505,57 @@ export const nextLive: LiveEvent = {
   host: 'Marina Duarte',
   joinUrl: '#',
 };
+
+export const chatMessages: ChatMessage[] = [
+  {
+    id: 'msg-1',
+    from: 'creator',
+    text: 'Oi, Ana! Vi que você terminou o módulo de Posicionamento. Como foi?',
+    sentAt: '2026-11-09T14:02:00-03:00',
+  },
+  {
+    id: 'msg-2',
+    from: 'member',
+    text: 'Oi, Marina! Adorei.',
+    sentAt: '2026-11-09T14:10:00-03:00',
+  },
+  {
+    id: 'msg-3',
+    from: 'member',
+    text: 'Só fiquei com uma dúvida na parte da persona: posso ter mais de uma, ou isso acaba diluindo a mensagem do meu perfil?',
+    sentAt: '2026-11-09T14:11:00-03:00',
+  },
+  {
+    id: 'msg-4',
+    from: 'creator',
+    text: 'Boa pergunta! No começo, fique com uma só.',
+    sentAt: '2026-11-09T14:30:00-03:00',
+  },
+  {
+    id: 'msg-5',
+    from: 'creator',
+    text: 'Quando você fala com todo mundo, ninguém sente que é com ele. Depois que o perfil ganhar tração, dá para abrir uma segunda persona e testar com uma série de conteúdos separada.',
+    sentAt: '2026-11-09T14:31:00-03:00',
+  },
+  {
+    id: 'msg-6',
+    from: 'member',
+    text: 'Faz total sentido, obrigada!',
+    sentAt: '2026-11-10T09:15:00-03:00',
+  },
+  {
+    id: 'msg-7',
+    from: 'member',
+    text: 'Vou refazer o exercício hoje:\n1. Escolher a persona principal\n2. Reescrever a bio\n3. Planejar os próximos 5 posts',
+    sentAt: '2026-11-10T09:16:00-03:00',
+  },
+  {
+    id: 'msg-8',
+    from: 'creator',
+    text: 'Perfeito 👏',
+    sentAt: '2026-11-10T11:48:00-03:00',
+  },
+];
 
 export const faqs: Faq[] = [
   {

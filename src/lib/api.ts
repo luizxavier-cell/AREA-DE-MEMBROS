@@ -12,10 +12,11 @@ import { query, revalidate } from '@solidjs/router';
 
 import { lessonKey } from './progress';
 import * as data from './mock-data';
-import type { Course, Member } from './types';
+import type { ChatMessage, Course, Member } from './types';
 
 let progress = data.initialProgress();
 let member = data.member;
+let chatMessages = data.chatMessages;
 
 /** Plain copies, so callers can never mutate the source of truth. */
 const clone = <T>(value: T): T => structuredClone(value);
@@ -37,6 +38,25 @@ export const getAnnouncements = query(async () => clone(data.announcements), 'an
 export const getNextLive = query(async () => clone(data.nextLive), 'next-live');
 
 export const getFaqs = query(async () => clone(data.faqs), 'faqs');
+
+/** The member's 1:1 conversation with the Creator, oldest first. */
+export const getChatMessages = query(
+  async (): Promise<ChatMessage[]> => clone(chatMessages),
+  'chat-messages',
+);
+
+export async function sendChatMessage(text: string) {
+  chatMessages = [
+    ...chatMessages,
+    {
+      id: `msg-${chatMessages.length + 1}`,
+      from: 'member',
+      text,
+      sentAt: new Date().toISOString(),
+    },
+  ];
+  revalidate(getChatMessages.key);
+}
 
 /** Marks a lesson as done (or not done) and refreshes what depends on it. */
 export async function setLessonCompleted(courseId: string, lessonId: string, completed: boolean) {

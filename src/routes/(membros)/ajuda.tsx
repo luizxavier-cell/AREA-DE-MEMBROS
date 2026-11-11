@@ -1,7 +1,7 @@
 import { Title } from '@solidjs/meta';
 import type { RouteDefinition } from '@solidjs/router';
 import { For, createMemo } from 'solid-js';
-import { Clock, LifeBuoy, Mail, MessageCircle } from 'lucide';
+import { Clock, LifeBuoy, Mail } from 'lucide';
 
 import { PageHeader } from '../../components/site-header';
 import {
@@ -82,24 +82,6 @@ export default function HelpPage() {
               <CardFooter>
                 <a href={`mailto:${platform.supportEmail}`} class={cn(buttonVariants(), 'w-full')}>
                   Enviar e-mail
-                </a>
-              </CardFooter>
-            </Card>
-
-            <Card class="gap-4">
-              <CardHeader>
-                <CardTitle class="flex items-center gap-2">
-                  <Icon icon={MessageCircle} class="text-primary" />
-                  Comunidade
-                </CardTitle>
-                <CardDescription>
-                  Troque experiências com outros membros e envie perguntas para as mentorias ao
-                  vivo.
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <a href="#" class={cn(buttonVariants({ variant: 'outline' }), 'w-full')}>
-                  Acessar a comunidade
                 </a>
               </CardFooter>
             </Card>

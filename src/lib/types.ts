@@ -107,3 +107,11 @@ export type LiveEvent = {
 };
 
 export type Faq = { question: string; answer: string };
+
+/** One message of the 1:1 chat between the member and the Creator. */
+export type ChatMessage = {
+  id: string;
+  from: 'member' | 'creator';
+  text: string;
+  sentAt: string;
+};

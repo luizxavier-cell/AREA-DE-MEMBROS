@@ -8,6 +8,7 @@ import {
   GraduationCap,
   House,
   LogOut,
+  MessageCircle,
   Pin,
   Search,
   UserRound,
@@ -32,10 +33,14 @@ import {
 import { Icon } from './ui/icon';
 import { Avatar } from './ui/misc';
 
-/** The main sections: links in the top bar, tabs in the phone's tab bar. */
+/**
+ * The main sections: links in the top bar, tabs in the phone's tab bar. Chat
+ * is a tab only; wider screens reach it through the ChatBubble.
+ */
 export const navLinks = () => [
   { label: 'Início', href: String(paths()), icon: House },
   { label: 'Meus cursos', href: String(paths.cursos()), icon: BookOpen },
+  { label: 'Chat', href: String(paths.chat()), icon: MessageCircle, phoneOnly: true },
   { label: 'Ajuda', href: String(paths.ajuda()), icon: CircleQuestionMark },
 ];
 
@@ -90,7 +95,7 @@ export function SiteHeader() {
 function NavLinks() {
   return (
     <ul class="scrollbar-none -mx-2 flex items-center overflow-x-auto">
-      <For each={navLinks()}>
+      <For each={navLinks().filter((link) => !link.phoneOnly)}>
         {(link) => (
           <li class="shrink-0">
             <a

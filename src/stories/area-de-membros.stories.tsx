@@ -54,6 +54,8 @@ export const CursoNaoEncontrado: Story = {
 
 export const MinhaConta: Story = { name: 'Minha conta', args: { url: '/conta' } };
 
+export const Chat: Story = { name: 'Chat', args: { url: '/chat' } };
+
 export const Ajuda: Story = { name: 'Ajuda', args: { url: '/ajuda' } };
 
 export const InicioCelular: Story = {

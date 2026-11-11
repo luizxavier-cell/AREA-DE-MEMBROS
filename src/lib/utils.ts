@@ -47,6 +47,19 @@ const dayMonthFormat = new Intl.DateTimeFormat('pt-BR', {
   timeZone: 'America/Sao_Paulo',
 });
 
+const timeFormat = new Intl.DateTimeFormat('pt-BR', {
+  hour: '2-digit',
+  minute: '2-digit',
+  timeZone: 'America/Sao_Paulo',
+});
+
+const dayKeyFormat = new Intl.DateTimeFormat('en-CA', {
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  timeZone: 'America/Sao_Paulo',
+});
+
 const dateTimeFormat = new Intl.DateTimeFormat('pt-BR', {
   weekday: 'long',
   day: '2-digit',
@@ -69,6 +82,24 @@ export function formatDayMonth(iso: string) {
 /** "2026-11-12T20:00:00-03:00" -> "quinta-feira, 12 de novembro às 20:00" */
 export function formatDateTime(iso: string) {
   return dateTimeFormat.format(new Date(iso));
+}
+
+/** "2026-11-12T20:05:00-03:00" -> "20:05" */
+export function formatTime(iso: string) {
+  return timeFormat.format(new Date(iso));
+}
+
+/** Calendar day in the platform's time zone, e.g. "2026-11-12". */
+export function dayKey(date: string | number) {
+  return dayKeyFormat.format(new Date(date));
+}
+
+/** A chat day separator: "Hoje", "Ontem" or "8 de nov." */
+export function formatChatDay(iso: string, now = Date.now()) {
+  const day = dayKey(iso);
+  if (day === dayKey(now)) return 'Hoje';
+  if (day === dayKey(now - 86_400_000)) return 'Ontem';
+  return formatDayMonth(iso);
 }
 
 /** Portuguese plural: plural(3, 'aula', 'aulas') -> "3 aulas" */

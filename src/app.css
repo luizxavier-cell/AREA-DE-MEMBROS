@@ -187,6 +187,28 @@
   box-shadow: inset 0 1px 0 oklch(1 0 0 / 22%);
 }
 
+/* Acompanha o teclado do iPhone. As curvas são as do próprio teclado, medidas
+   quadro a quadro: sobe em 350ms e desce em cerca de 80ms. Uma subida feita
+   antes do focus() espera os ~60ms em que o iOS segura a página. */
+@utility keyboard-glide {
+  transition-property: bottom;
+  transition-duration: 80ms;
+  transition-timing-function: linear;
+
+  &[data-keyboard] {
+    transition-duration: 350ms;
+    transition-timing-function: cubic-bezier(0.3, 0.6, 0.2, 1);
+  }
+
+  &[data-keyboard='ahead'] {
+    transition-delay: 40ms;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
 /* Liquid Glass para a web. A refração real (SVG em backdrop-filter) só existe
    no Chromium, e o Safari a ignora em silêncio; aqui o material vem de camadas
    que funcionam no iPhone: fosco saturado, brilho interno nas bordas e um aro
