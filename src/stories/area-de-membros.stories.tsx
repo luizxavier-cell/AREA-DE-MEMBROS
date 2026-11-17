@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from 'storybook-solidjs-vite';
 
+import { seedProgress } from '../lib/api';
 import { Screen } from './screen';
 
 // Full screens of the members area, rendered by the real app at each URL.
@@ -19,6 +20,17 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Inicio: Story = { name: 'Início', args: { url: '/' } };
+
+// A member who hasn't opened any lesson yet: no "Continuar assistindo", and the
+// billboard invites them to start. Restores the seed progress on the way out.
+export const InicioAlunoNovo: Story = {
+  name: 'Início — aluno novo',
+  args: { url: '/' },
+  beforeEach: () => {
+    seedProgress({ completed: [], lastLesson: {} });
+    return () => seedProgress();
+  },
+};
 
 export const MeusCursos: Story = { name: 'Meus cursos', args: { url: '/cursos' } };
 

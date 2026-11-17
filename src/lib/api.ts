@@ -12,7 +12,7 @@ import { query, revalidate } from '@solidjs/router';
 
 import { lessonKey } from './progress';
 import * as data from './mock-data';
-import type { ChatMessage, Course, Member } from './types';
+import type { ChatMessage, Course, Member, Progress } from './types';
 
 let progress = data.initialProgress();
 let member = data.member;
@@ -32,6 +32,16 @@ export const getCourse = query(
 );
 
 export const getProgress = query(async () => clone(progress), 'progress');
+
+/**
+ * Mock only (Storybook): swaps the member's progress, e.g. an empty one for a
+ * member who hasn't watched anything yet. No argument restores the seed.
+ * Goes away with the backend.
+ */
+export function seedProgress(next: Progress = data.initialProgress()) {
+  progress = clone(next);
+  revalidate(getProgress.key);
+}
 
 export const getAnnouncements = query(async () => clone(data.announcements), 'announcements');
 
