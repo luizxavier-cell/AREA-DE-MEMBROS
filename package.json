@@ -30,6 +30,7 @@
     "@storybook/builder-vite": "^10.6.7",
     "@tailwindcss/vite": "^4.3.5",
     "@testing-library/jest-dom": "^7.0.0",
+    "@tybys/wasm-util": "0.10.4",
     "@types/node": "^26.6.6",
     "eslint-plugin-solid": "~0.19.0",
     "filesystem-routing": "0.5.0",
